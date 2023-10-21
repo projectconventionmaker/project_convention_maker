@@ -1,29 +1,46 @@
-import InputLabel from '@mui/material/InputLabel';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import styles from './Overview.module.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import { nanoid } from 'nanoid';
 import SaveButton from './Button';
+import { Dayjs } from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-const PROJECT_INITIAL_DATA = {
-  project_name: '프로젝트 이름',
-  team_name: '팀 이름',
-  project_duration: '프로젝트 기간',
-  summary: '프로젝트 한 줄 소개',
-  detail: '프로젝트 소개',
-  teammate: [
-    { id: nanoid(), name: '이름', position: '포지션', github: '깃허브' },
-  ],
-};
+interface Teammate {
+  id: string;
+  name: string;
+  position: string;
+  github: string;
+}
+
+interface OverviewData {
+  project_name: string;
+  team_name: string;
+  project_start: Dayjs | null;
+  project_end: Dayjs | null;
+  summary: string;
+  detail: string;
+  teammate: Teammate[];
+}
 
 const Overview = () => {
-  const [body, setBody] = useState(PROJECT_INITIAL_DATA);
+  const [body, setBody] = useState<OverviewData>({
+    project_name: '',
+    team_name: '',
+    project_start: null,
+    project_end: null,
+    summary: '',
+    detail: '',
+    teammate: [],
+  });
 
   const handleSubmit = () => {
     const requestData = JSON.stringify(body);
-    const apiUrl = '#';
+    const apiUrl =
+      'https://api.pcmk.dppr.me/api/v1/projects/e1555f7b-8113-4224-a082-1503c43de5ab';
     fetch(apiUrl, {
       method: 'POST',
       headers: {
@@ -50,6 +67,14 @@ const Overview = () => {
     setBody({ ...body, teammate: deletedReslut });
   };
 
+  useEffect(() => {
+    // const getOverview = async () => {
+    //   const json = await (await fetch('#')).json();
+    //   setBody(json);
+    // };
+    // getOverview();
+  }, []);
+
   return (
     <form className={styles.container}>
       <SaveButton onClick={handleSubmit} />
@@ -59,7 +84,7 @@ const Overview = () => {
           <TextField
             required
             id="outlined-required"
-            placeholder={PROJECT_INITIAL_DATA.project_name}
+            placeholder="프로젝트 이름"
             onChange={e => {
               setBody(prev => ({ ...prev, project_name: e.target.value }));
             }}
@@ -67,7 +92,7 @@ const Overview = () => {
           <TextField
             required
             id="outlined-required"
-            placeholder={PROJECT_INITIAL_DATA.team_name}
+            placeholder="팀 명"
             onChange={e => {
               setBody(prev => ({ ...prev, team_name: e.target.value }));
             }}
@@ -76,11 +101,29 @@ const Overview = () => {
         <TextField
           required
           id="outlined-required"
-          placeholder={PROJECT_INITIAL_DATA.project_duration}
+          placeholder="프로젝트 개요"
           onChange={e => {
-            setBody(prev => ({ ...prev, project_duration: e.target.value }));
+            setBody(prev => ({ ...prev, summary: e.target.value }));
           }}
         />
+      </div>
+      <div>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="프로젝트 시작"
+            value={body.project_start}
+            onChange={date => {
+              setBody(prev => ({ ...prev, project_start: date }));
+            }}
+          />
+          <DatePicker
+            label="프로젝트 종료"
+            value={body.project_end}
+            onChange={date => {
+              setBody(prev => ({ ...prev, project_end: date }));
+            }}
+          />
+        </LocalizationProvider>
       </div>
       <div>
         <div className={styles.boxTitle}>프로젝트 팀원</div>
