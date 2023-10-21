@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import styles from './Nav.module.scss';
 import { Outlet } from 'react-router-dom';
+import { nanoid } from 'nanoid';
 
 const NAVLIST = [
   { to: '#', name: '프로젝트 개요' },
@@ -20,7 +21,7 @@ const Nav = () => {
           <div className={styles.projectName}>프로젝트명</div>
           <div>
             {NAVLIST.map(item => (
-              <NavItem name={item.name} />
+              <NavItem name={item.name} key={nanoid()}/>
             ))}
           </div>
         </div>
