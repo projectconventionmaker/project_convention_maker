@@ -1,0 +1,37 @@
+.navContainer {
+  position: fixed;
+  top: 8rem;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5rem 0px 2rem 0px;
+  width: 20rem;
+  border-right: 0.2px solid rgb(97, 97, 97);
+
+  > .navMenuWrapper {
+    width: 90%;
+    > .projectName {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+.itemContainer {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  font-size: 1.5rem;
+  height: 3rem;
+  border-radius: 5px;
+  padding: 0.5rem;
+  > a {
+    color: black;
+    font-weight: 500;
+  }
+  &:hover {
+    background-color: rgb(142, 142, 213);
+  }
+}

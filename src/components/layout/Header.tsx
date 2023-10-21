@@ -5,7 +5,9 @@ const Header = () => {
   return (
     <header className={styles.container}>
       <div>Project Convention Maker</div>
-      <Button variant="contained">완료</Button>
+      <Button size="large" variant="contained">
+        저장
+      </Button>
     </header>
   );
 };
