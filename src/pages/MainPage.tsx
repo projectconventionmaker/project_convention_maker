@@ -1,11 +1,9 @@
-import Header from '../components/layout/Header';
-import Nav from '../components/layout/Nav';
+import Overview from '../components/Overview';
 
 const MainPage = () => {
   return (
     <main>
-      <Header />
-      <Nav />
+      <Overview />
     </main>
   );
 };

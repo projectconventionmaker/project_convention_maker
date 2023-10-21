@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import styles from './Nav.module.scss';
+import { Outlet } from 'react-router-dom';
 
 const NAVLIST = [
   { to: '#', name: '프로젝트 개요' },
@@ -13,21 +14,24 @@ const NAVLIST = [
 
 const Nav = () => {
   return (
-    <nav className={styles.navContainer}>
-      <div className={styles.navMenuWrapper}>
-        <div className={styles.projectName}>프로젝트명</div>
-        <div>
-          {NAVLIST.map(item => (
-            <NavItem name={item.name} />
-          ))}
+    <>
+      <nav className={styles.navContainer}>
+        <div className={styles.navMenuWrapper}>
+          <div className={styles.projectName}>프로젝트명</div>
+          <div>
+            {NAVLIST.map(item => (
+              <NavItem name={item.name} />
+            ))}
+          </div>
         </div>
-      </div>
-      <Link to="intro">
-        <Button size="large" variant="contained">
-          프로젝트 변경
-        </Button>
-      </Link>
-    </nav>
+        <Link to="intro">
+          <Button size="large" variant="contained">
+            프로젝트 변경
+          </Button>
+        </Link>
+      </nav>
+      <Outlet />
+    </>
   );
 };
 
