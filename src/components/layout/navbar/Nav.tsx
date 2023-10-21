@@ -8,7 +8,7 @@ const NAVLIST = [
   { to: '/overview', name: '프로젝트 개요' },
   { to: '/stack', name: '기술 스택' },
   { to: '#', name: '그라운드 롤' },
-  { to: '#', name: '커밋 컨벤선' },
+  { to: '/commit', name: '커밋 컨벤선' },
   { to: '#', name: '코드 컨벤선' },
   { to: '#', name: '결과 보기' },
 ];
@@ -21,7 +21,7 @@ const Nav = () => {
           <div className={styles.projectName}>프로젝트명</div>
           <div>
             {NAVLIST.map(item => (
-              <NavItem name={item.name} key={nanoid()} path={item.to}/>
+              <NavItem name={item.name} key={nanoid()} path={item.to} />
             ))}
           </div>
         </div>
