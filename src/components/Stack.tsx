@@ -156,7 +156,7 @@ const Stack = () => {
   };
 
   return (
-    <form className={styles.container}>
+    <form className={styles.container} onSubmit={handleSubmit}>
       <label>언어</label>
       <div className={styles.card_wrapper}>
         {LANGUAGE_LIST.map(item => {
@@ -228,7 +228,7 @@ const Stack = () => {
         })}
         <StackItemAdd />
       </div>
-      <SaveButton onClick={handleSubmit} />
+      <SaveButton />
     </form>
   );
 };
