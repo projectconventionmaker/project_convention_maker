@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
 import styles from './Nav.module.scss';
 import { Outlet } from 'react-router-dom';
@@ -14,6 +14,7 @@ const NAVLIST = [
 ];
 
 const Nav = () => {
+  const location = useLocation();
   return (
     <>
       <nav className={styles.navContainer}>
@@ -21,7 +22,12 @@ const Nav = () => {
           <div className={styles.projectName}>프로젝트명</div>
           <div>
             {NAVLIST.map(item => (
-              <NavItem name={item.name} key={nanoid()} path={item.to} />
+              <NavItem
+                name={item.name}
+                key={nanoid()}
+                path={item.to}
+                selected={location.pathname === item.to || false}
+              />
             ))}
           </div>
         </div>
@@ -33,7 +39,15 @@ const Nav = () => {
 
 export default Nav;
 
-const NavItem = ({ name, path }: { name: string; path: string }) => {
+const NavItem = ({
+  name,
+  path,
+  selected,
+}: {
+  name: string;
+  path: string;
+  selected: boolean;
+}) => {
   return (
     <div className={styles.itemContainer}>
       <div>icon</div>

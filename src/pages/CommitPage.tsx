@@ -3,11 +3,15 @@ import {
   FormControl,
   FormControlLabel,
   Typography,
+  Grid,
+  Box,
+  Divider,
+  Chip,
 } from '@mui/material';
 import SaveButton from '../components/Button';
 import { FormEvent } from 'react';
 
-const COMMIT_MESSAGE = [
+const COMMIT_MESSAGES = [
   '[feat] : 기능 추가, 삭제, 변경',
   '[fix] : 버그, 오류 수정',
   '[docs] : readme.md, json 파일 등 수정, 라이브러리 설치 (문서 관련, 코드 수정 없음)',
@@ -33,21 +37,65 @@ const CommitPage = () => {
   };
 
   return (
-    <>
-      <Typography variant="h2" gutterBottom>
-        h2. Heading
-      </Typography>
-      <FormControl component="form" onSubmit={onSubmit}>
-        <SaveButton />
-        {COMMIT_MESSAGE.map((message, _) => (
-          <FormControlLabel
-            key={message}
-            control={<Checkbox name={message} />}
-            label={message}
+    <FormControl component="form" onSubmit={onSubmit}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Typography
+              variant="h3"
+              gutterBottom
+              sx={{
+                fontWeight: '400',
+              }}
+            >
+              💌 커밋 컨벤션
+            </Typography>
+            <SaveButton />
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography
+            variant="subtitle1"
+            gutterBottom
+            sx={{
+              fontSize: '1.5rem',
+              color: '#666666',
+            }}
+          >
+            팀원과 소통을 원활히 하고, 코드 변경사항을 편리하게 확인하기 위해
+            좋은 커밋메시지를 작성해야 합니다.
+          </Typography>
+          <Divider
+            variant="fullWidth"
+            sx={{
+              marginBottom: '2rem',
+            }}
           />
+        </Grid>
+
+        {COMMIT_MESSAGES.map((message, _) => (
+          <Grid item key={message} xs={12} lg={6}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name={message}
+                  sx={{
+                    fontSize: '1.4rem',
+                  }}
+                />
+              }
+              label={<div style={{ fontSize: '1.6rem' }}>{message}</div>}
+            />
+          </Grid>
         ))}
-      </FormControl>
-    </>
+      </Grid>
+    </FormControl>
   );
 };
 
