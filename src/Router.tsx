@@ -1,18 +1,19 @@
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import IntroPage from './pages/IntroPage';
 import ResultPage from './pages/ResultPage';
+import Stack from './components/Stack';
+import Overview from './components/Overview';
 
 
 const Router = () => {
   return (
-    <BrowserRouter>
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route path="/" element={<IntroPage />} />
+        <Route path="/overview" element={<Overview />} />
+        <Route path="/stack" element={<Stack />} />
         <Route path="/result" element={<ResultPage />} />
-        <Route path="/intro" element={<IntroPage />} />
       </Routes>
-    </BrowserRouter>
   );
 };
 
