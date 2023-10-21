@@ -112,6 +112,10 @@ const Stack = () => {
     if (language.includes(selectedStack!)) {
       setLanguage(prev => prev.filter(item => item !== selectedStack));
     } else {
+      if (language.length === 1) {
+        alert('언어는 하나만 선택할 수 있습니다.');
+        return;
+      }
       setLanguage(prev => [...prev, selectedStack!]);
     }
   };
