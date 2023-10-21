@@ -1,4 +1,5 @@
 .container {
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -6,11 +7,15 @@
     font-size: 2rem;
     font-weight: 700;
   }
+  img {
+    width: 50px;
+    max-height: 50px;
+  }
 }
 
 .card_wrapper {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 20px;
 }
 
@@ -18,6 +23,9 @@
   background-color: yellow;
   display: flex;
   gap: 10px;
+  justify-content: space-between;
+  padding: 10px;
+  align-items: center;
 }
 
 .active {

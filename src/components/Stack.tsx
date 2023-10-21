@@ -3,6 +3,22 @@ import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import { useEffect, useState } from 'react';
 import styles from './Stack.module.scss';
+import react from '../assets/react.png';
+import vue from '../assets/vue.png';
+import javascript from '../assets/javascript.png';
+import typescript from '../assets/typescript.png';
+import svelte from '../assets/svelte.png';
+import angular from '../assets/angular.png';
+import css from '../assets/css.png';
+import recoil from '../assets/recoil.svg';
+import redux from '../assets/redux.png';
+import tailwind from '../assets/tailwindcss.png';
+import axios from '../assets/axios.svg';
+import storybook from '../assets/storybook.svg';
+import sass from '../assets/sass.png';
+import jest from '../assets/jest.png';
+import jotai from '../assets/jotai.png';
+import reactQuery from '../assets/react-query.svg';
 
 interface StackItemType {
   name: string;
@@ -11,21 +27,74 @@ interface StackItemType {
 }
 
 const LANGUAGE_LIST: StackItemType[] = [
-  { name: 'JavaScript', description: '리액트관련 설명', imgUrl: 'assets/png' },
-  { name: 'TypeScript', description: '리액트관련 설명', imgUrl: 'assets/png' },
+  { name: 'JavaScript', description: '웹 개발 언어', imgUrl: javascript },
+  { name: 'TypeScript', description: '정적 타입 언어', imgUrl: typescript },
 ];
 
 const FRAMEWORK_LIST: StackItemType[] = [
-  { name: 'React', description: '리액트관련 설명', imgUrl: 'assets/png' },
-  { name: 'Vue', description: '리액트관련 설명', imgUrl: 'assets/png' },
-  { name: 'Angular', description: '리액트관련 설명', imgUrl: 'assets/png' },
-  { name: 'Svelte', description: '리액트관련 설명', imgUrl: 'assets/png' },
+  {
+    name: 'React',
+    description: '인기있는 UI 라이브러리',
+    imgUrl: react,
+  },
+  { name: 'Vue', description: '접근성 있는 프레임워크', imgUrl: vue },
+  {
+    name: 'Angular',
+    description: '엔터프라이즈 프레임워크',
+    imgUrl: angular,
+  },
+  {
+    name: 'Svelte',
+    description: '빠르고 간단한 UI 프레임워크',
+    imgUrl: svelte,
+  },
+  { name: 'Redux', description: '상태 관리 라이브러리', imgUrl: redux },
+  { name: 'Recoil', description: '최신 상태 관리 도구', imgUrl: recoil },
+  {
+    name: 'Zustand',
+    description: '간편한 상태 관리 라이브러리',
+    imgUrl: 'assets/png',
+  },
+  {
+    name: 'Jotai',
+    description: '리액티브 상태 관리 도구',
+    imgUrl: jotai,
+  },
+  {
+    name: 'Axios',
+    description: 'HTTP 클라이언트 라이브러리',
+    imgUrl: axios,
+  },
+  {
+    name: 'React-query',
+    description: '데이터 쿼리 및 캐싱 라이브러리',
+    imgUrl: reactQuery,
+  },
+  {
+    name: 'Jest',
+    description: '자바스크립트 테스트 프레임워크',
+    imgUrl: jest,
+  },
+  {
+    name: 'Cypress',
+    description: '엔드 투 엔드 테스트 도구',
+    imgUrl: 'assets/png',
+  },
+  {
+    name: 'Storybook',
+    description: 'UI 컴포넌트 개발 환경',
+    imgUrl: storybook,
+  },
 ];
 
 const STYLE_LIST: StackItemType[] = [
-  { name: 'CSS', description: '리액트관련 설명', imgUrl: 'assets/png' },
-  { name: 'SASS', description: '리액트관련 설명', imgUrl: 'assets/png' },
-  { name: 'TailwindCSS', description: '리액트관련 설명', imgUrl: 'assets/png' },
+  { name: 'CSS', description: '웹 스타일링 언어', imgUrl: css },
+  { name: 'SASS', description: 'CSS 확장 언어', imgUrl: sass },
+  {
+    name: 'TailwindCSS',
+    description: '구성 가능한 CSS 프레임워크',
+    imgUrl: tailwind,
+  },
 ];
 
 const Stack = () => {
@@ -68,6 +137,7 @@ const Stack = () => {
             return <StackItemCard item={item} isSelected={false} />;
           }
         })}
+        <StackItemAdd />
       </div>
       <label>프레임워크</label>
       <div className={styles.card_wrapper}>
@@ -78,6 +148,7 @@ const Stack = () => {
             return <StackItemCard item={item} isSelected={false} />;
           }
         })}
+        <StackItemAdd />
       </div>
       <label>스타일</label>
       <div className={styles.card_wrapper}>
@@ -88,6 +159,7 @@ const Stack = () => {
             return <StackItemCard item={item} isSelected={false} />;
           }
         })}
+        <StackItemAdd />
       </div>
     </form>
   );
@@ -116,7 +188,17 @@ const StackItemCard = ({
         <CardHeader title={item.name} />
         <CardContent>{item.description}</CardContent>
       </div>
-      <img src={'#' ?? item.imgUrl} />
+      <img src={item.imgUrl} alt={item.name} />
+    </Card>
+  );
+};
+
+const StackItemAdd = () => {
+  return (
+    <Card variant="outlined">
+      <div>
+        <button>+</button>
+      </div>
     </Card>
   );
 };
