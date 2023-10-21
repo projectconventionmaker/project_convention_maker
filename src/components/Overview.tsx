@@ -5,6 +5,7 @@ import styles from './Overview.module.scss';
 import { useState } from 'react';
 import { Button } from '@mui/material';
 import { nanoid } from 'nanoid';
+import SaveButton from './Button';
 
 const PROJECT_INITIAL_DATA = {
   project_name: '프로젝트 이름',
@@ -51,6 +52,7 @@ const Overview = () => {
 
   return (
     <form className={styles.container}>
+      <SaveButton onClick={handleSubmit} />
       <div className={styles.boxWrapper}>
         <div className={styles.boxTitle}>프로젝트 개요</div>
         <div>

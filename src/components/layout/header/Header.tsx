@@ -1,15 +1,18 @@
 import { Button } from '@mui/material';
 import styles from './Header.module.scss';
 import { Outlet } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
     <>
       <header className={styles.container}>
         <div>Project Convention Maker</div>
-        <Button size="large" variant="contained">
-          저장
-        </Button>
+        <Link to="intro">
+          <Button size="large" variant="contained">
+            프로젝트 변경
+          </Button>
+        </Link>
       </header>
       <Outlet />
     </>
