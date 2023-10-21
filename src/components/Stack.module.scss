@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  label {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+}
+
+.card_wrapper {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
+}
+
+.itemCard {
+  background-color: yellow;
+  display: flex;
+  gap: 10px;
+}
+
+.active {
+  background-color: pink;
+}
