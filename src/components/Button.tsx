@@ -1,9 +1,11 @@
-import { Button } from "@mui/material";
+import { Button } from '@mui/material';
 
-const SaveButton = ({ onClick }: { onClick: () => void}) => {
-    return (
-        <Button variant="contained" onClick={onClick}>저장</Button>
-    );
+const SaveButton = () => {
+  return (
+    <Button type='submit' variant="contained">
+      저장
+    </Button>
+  );
 };
 
 export default SaveButton;

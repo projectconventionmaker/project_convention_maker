@@ -51,8 +51,8 @@ const Overview = () => {
   };
 
   return (
-    <form className={styles.container}>
-      <SaveButton onClick={handleSubmit} />
+    <form className={styles.container} onSubmit={handleSubmit}>
+      <SaveButton />
       <div className={styles.boxWrapper}>
         <div className={styles.boxTitle}>프로젝트 개요</div>
         <div>
