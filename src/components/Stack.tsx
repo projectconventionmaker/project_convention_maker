@@ -1,7 +1,7 @@
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styles from './Stack.module.scss';
 import react from '../assets/react.png';
 import vue from '../assets/vue.png';
@@ -19,6 +19,11 @@ import sass from '../assets/sass.png';
 import jest from '../assets/jest.png';
 import jotai from '../assets/jotai.png';
 import reactQuery from '../assets/react-query.svg';
+import zustand from '../assets/zustand.png';
+import cypress from '../assets/cypress.png';
+import { Button, Theme, makeStyles } from '@mui/material';
+import SaveButton from './Button';
+import TextField from '@mui/material/TextField';
 
 interface StackItemType {
   name: string;
@@ -53,7 +58,7 @@ const FRAMEWORK_LIST: StackItemType[] = [
   {
     name: 'Zustand',
     description: '간편한 상태 관리 라이브러리',
-    imgUrl: 'assets/png',
+    imgUrl: zustand,
   },
   {
     name: 'Jotai',
@@ -78,7 +83,7 @@ const FRAMEWORK_LIST: StackItemType[] = [
   {
     name: 'Cypress',
     description: '엔드 투 엔드 테스트 도구',
-    imgUrl: 'assets/png',
+    imgUrl: cypress,
   },
   {
     name: 'Storybook',
@@ -98,6 +103,7 @@ const STYLE_LIST: StackItemType[] = [
 ];
 
 const Stack = () => {
+  // 받아온 데이터 배열화 필요
   const [language, setLanguage] = useState<string[]>([]);
   const [framework, setFramework] = useState<string[]>(['React', 'Vue']);
   const [style, setStyle] = useState<string[]>(['SASS']);
@@ -105,47 +111,95 @@ const Stack = () => {
   //** 언어를 선택해서 배열에 담는 함수 */
   const handleLanguageChange = (e: React.MouseEvent<HTMLDivElement>) => {
     const selectedStack = e.currentTarget.getAttribute('data-stack');
-    setLanguage(prev => [...prev, selectedStack!]);
+
+    if (language.includes(selectedStack!)) {
+      setLanguage(prev => prev.filter(item => item !== selectedStack));
+    } else {
+      if (language.length === 1) {
+        alert('언어는 하나만 선택할 수 있습니다.');
+        return;
+      }
+      setLanguage(prev => [...prev, selectedStack!]);
+    }
   };
 
   //** 프레임워크를 선택해서 배열에 담는 함수 */
   const handleFrameworkChange = (e: React.MouseEvent<HTMLDivElement>) => {
     const selectedStack = e.currentTarget.getAttribute('data-stack');
-    setFramework(prev => [...prev, selectedStack!]);
+
+    if (framework.includes(selectedStack!)) {
+      setFramework(prev => prev.filter(item => item !== selectedStack));
+    } else {
+      setFramework(prev => [...prev, selectedStack!]);
+    }
   };
 
   //** 스타일을 선택해서 배열에 담는 함수 */
   const handleStyleChange = (e: React.MouseEvent<HTMLDivElement>) => {
     const selectedStack = e.currentTarget.getAttribute('data-stack');
-    setStyle(prev => [...prev, selectedStack!]);
+
+    if (style.includes(selectedStack!)) {
+      setStyle(prev => prev.filter(item => item !== selectedStack));
+    } else {
+      setStyle(prev => [...prev, selectedStack!]);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log({ ...language, ...framework, ...style });
+    console.log({
+      languages: language.map(item => ({ name: item })),
+      frameworks: framework.map(item => ({ name: item })),
+      styles: style.map(item => ({ name: item })),
+    });
   };
 
   return (
-    <form className={styles.container}>
+    <form className={styles.container} onSubmit={handleSubmit}>
       <label>언어</label>
       <div className={styles.card_wrapper}>
         {LANGUAGE_LIST.map(item => {
           if (language.includes(item.name)) {
-            return <StackItemCard item={item} isSelected />;
+            return (
+              <StackItemCard
+                item={item}
+                handleClick={handleLanguageChange}
+                key={item.name}
+                isSelected
+              />
+            );
           } else {
-            return <StackItemCard item={item} isSelected={false} />;
+            return (
+              <StackItemCard
+                handleClick={handleLanguageChange}
+                item={item}
+                isSelected={false}
+              />
+            );
           }
         })}
-        <StackItemAdd />
       </div>
-      <label>프레임워크</label>
+      <label>프레임워크 및 라이브러리</label>
       <div className={styles.card_wrapper}>
         {FRAMEWORK_LIST.map(item => {
           if (framework.includes(item.name)) {
-            return <StackItemCard item={item} isSelected />;
+            return (
+              <StackItemCard
+                item={item}
+                handleClick={handleFrameworkChange}
+                key={item.name}
+                isSelected
+              />
+            );
           } else {
-            return <StackItemCard item={item} isSelected={false} />;
+            return (
+              <StackItemCard
+                handleClick={handleFrameworkChange}
+                item={item}
+                isSelected={false}
+              />
+            );
           }
         })}
         <StackItemAdd />
@@ -154,13 +208,27 @@ const Stack = () => {
       <div className={styles.card_wrapper}>
         {STYLE_LIST.map(item => {
           if (style.includes(item.name)) {
-            return <StackItemCard item={item} isSelected />;
+            return (
+              <StackItemCard
+                item={item}
+                handleClick={handleStyleChange}
+                key={item.name}
+                isSelected
+              />
+            );
           } else {
-            return <StackItemCard item={item} isSelected={false} />;
+            return (
+              <StackItemCard
+                handleClick={handleStyleChange}
+                item={item}
+                isSelected={false}
+              />
+            );
           }
         })}
         <StackItemAdd />
       </div>
+      <SaveButton />
     </form>
   );
 };
@@ -170,19 +238,26 @@ export default Stack;
 const StackItemCard = ({
   item,
   isSelected,
+  handleClick,
 }: {
   item: StackItemType;
   isSelected: boolean;
+  handleClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 }) => {
+  // 선택된 경우 active 클래스를 추가
+  const cardClasses = isSelected
+    ? `${styles.itemCard} ${styles.active}`
+    : styles.itemCard;
+
   return (
     <Card
+      style={{ backgroundColor: isSelected ? 'pink' : 'white' }}
       variant="outlined"
       classes={{
-        root: isSelected
-          ? `${styles.itemCard} ${styles.active}`
-          : styles.itemCard,
+        root: cardClasses,
       }}
       data-stack={item.name}
+      onClick={handleClick}
     >
       <div>
         <CardHeader title={item.name} />
@@ -195,10 +270,9 @@ const StackItemCard = ({
 
 const StackItemAdd = () => {
   return (
-    <Card variant="outlined">
-      <div>
-        <button>+</button>
-      </div>
-    </Card>
+    <div>
+      <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+      <Button variant="contained">추가</Button>
+    </div>
   );
 };
