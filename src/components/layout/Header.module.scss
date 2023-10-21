@@ -1,0 +1,16 @@
+.container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 5rem;
+  padding: 2rem;
+  border-bottom: 1px solid black;
+  div {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+}
