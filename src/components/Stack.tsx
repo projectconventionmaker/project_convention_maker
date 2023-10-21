@@ -21,7 +21,9 @@ import jotai from '../assets/jotai.png';
 import reactQuery from '../assets/react-query.svg';
 import zustand from '../assets/zustand.png';
 import cypress from '../assets/cypress.png';
-import { Theme, makeStyles } from '@mui/material';
+import { Button, Theme, makeStyles } from '@mui/material';
+import SaveButton from './Button';
+import TextField from '@mui/material/TextField';
 
 interface StackItemType {
   name: string;
@@ -101,6 +103,7 @@ const STYLE_LIST: StackItemType[] = [
 ];
 
 const Stack = () => {
+  // 받아온 데이터 배열화 필요
   const [language, setLanguage] = useState<string[]>([]);
   const [framework, setFramework] = useState<string[]>(['React', 'Vue']);
   const [style, setStyle] = useState<string[]>(['SASS']);
@@ -145,7 +148,11 @@ const Stack = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log({ ...language, ...framework, ...style });
+    console.log({
+      languages: language.map(item => ({ name: item })),
+      frameworks: framework.map(item => ({ name: item })),
+      styles: style.map(item => ({ name: item })),
+    });
   };
 
   return (
@@ -221,6 +228,7 @@ const Stack = () => {
         })}
         <StackItemAdd />
       </div>
+      <SaveButton onClick={handleSubmit} />
     </form>
   );
 };
@@ -262,10 +270,9 @@ const StackItemCard = ({
 
 const StackItemAdd = () => {
   return (
-    <Card variant="outlined">
-      <div>
-        <button>+</button>
-      </div>
-    </Card>
+    <div>
+      <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+      <Button variant="contained">추가</Button>
+    </div>
   );
 };
