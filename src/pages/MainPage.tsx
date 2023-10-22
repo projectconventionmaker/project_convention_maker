@@ -1,4 +1,4 @@
-import Overview from '../components/Overview';
+import Overview from './OverviewPage';
 import Header from '../components/layout/header/Header';
 import Nav from '../components/layout/navbar/Nav';
 
