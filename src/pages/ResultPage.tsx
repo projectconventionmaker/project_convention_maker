@@ -5,15 +5,28 @@ import {
   Card,
   CardHeader,
   CardContent,
+  Box,
 } from '@mui/material';
 
 const ResultPage = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Typography variant="h2" gutterBottom>
-          결과 보기
-        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+          }}
+        >
+          <img
+            src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Triangular%20Flag.png"
+            alt="Triangular Flag"
+            width="60"
+            height="60"
+          />
+          <Typography variant="h2">결과 보기</Typography>
+        </Box>
       </Grid>
       <Grid item xs={12}>
         <Typography
@@ -23,7 +36,7 @@ const ResultPage = () => {
             color: '#666666',
           }}
         >
-          {'팀이릉'}이 선택한 결광비니다.
+          {'프로젝트명'}이 설정한 컨벤션입니다.
         </Typography>
         <Divider variant="fullWidth" sx={{}} />
       </Grid>
