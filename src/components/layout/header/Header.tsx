@@ -8,8 +8,14 @@ const Header = () => {
     <>
       <header className={styles.container}>
         <div>Project Convention Maker</div>
-        <Link to="intro">
-          <Button size="large" variant="contained">
+        <Link to="">
+          <Button
+            size="large"
+            variant="contained"
+            sx={{
+              fontSize: '1.6rem',
+            }}
+          >
             프로젝트 변경
           </Button>
         </Link>
