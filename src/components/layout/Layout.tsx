@@ -91,10 +91,14 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <Box width="100%" sx={{ marginTop: '64px' }}>
           <Box
             bgcolor={'white'}
-            sx={{ margin: '20px', padding: '40px' }}
+            sx={{
+              margin: '20px',
+              padding: '40px',
+              minHeight: '100vh',
+            }}
             borderRadius={2}
           >
-            {children}
+            <Box sx={{ maxWidth: '1000px' }}> {children}</Box>
           </Box>
         </Box>
       </Box>
