@@ -9,7 +9,7 @@ const NAVLIST = [
   { to: '/stack', name: '기술 스택' },
   { to: '#', name: '그라운드 롤' },
   { to: '/commit', name: '커밋 컨벤선' },
-  { to: '#', name: '코드 컨벤선' },
+  { to: '/code', name: '코드 컨벤선' },
   { to: '#', name: '결과 보기' },
 ];
 
