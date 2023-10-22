@@ -13,12 +13,14 @@ const ModalAlert = ({
   title,
   content,
   handleConfirm,
+  isConfirm,
 }: {
   isOpen: boolean;
   handleIsOpen: () => void;
   title: string;
   content: string;
   handleConfirm?: () => void;
+  isConfirm?: boolean;
 }) => {
   return (
     <Dialog open={isOpen}>
@@ -30,7 +32,7 @@ const ModalAlert = ({
         <Button type="button" onClick={handleIsOpen}>
           닫기
         </Button>
-        {handleConfirm && (
+        {isConfirm && (
           <Button type="button" onClick={handleConfirm}>
             확인
           </Button>

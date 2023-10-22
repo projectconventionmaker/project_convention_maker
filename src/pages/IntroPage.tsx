@@ -8,10 +8,14 @@ const IntroPage = () => {
   const [projectName, setProjectName] = useState('');
   const [isModalAlertOpen, setIsModalAlert] = useState(false);
   const [alertContent, setAlertContent] = useState('');
-
-  let handleConfirm;
+  const [isConfirm, setIsConfirm] = useState(false);
 
   const navigator = useNavigate();
+
+  const handleConfirm = () => {
+    localStorage.setItem('project_name', projectName);
+    navigator('/overview');
+  };
 
   const toggleIsModalAlertOpen = () => {
     setIsModalAlert(prev => !prev);
@@ -20,23 +24,25 @@ const IntroPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (projectName === '') {
+    console.log(projectName);
+    if (!projectName || projectName === '') {
       setAlertContent('프로젝트명을 입력해주세요');
       toggleIsModalAlertOpen();
       return;
     }
-    const requestData = JSON.stringify(projectName);
+
     try {
       const response = await fetch('https://api.pcmk.dppr.me/api/v1/projects', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: requestData,
+        body: JSON.stringify({ project_name: projectName }),
       });
 
+      const jsonResponse = await response.json();
+
       if (response.ok) {
-        const jsonResponse = await response.json();
         localStorage.setItem('data', JSON.stringify(jsonResponse));
         localStorage.setItem('id', jsonResponse.project_detail.project_uuid);
         localStorage.setItem(
@@ -45,12 +51,13 @@ const IntroPage = () => {
         );
         navigator('/overview');
       } else {
-        if (response.status === 1001) {
+        if (jsonResponse.code === 1001) {
+          setIsConfirm(true);
           setAlertContent(
             '이미 존재하는 프로젝트명입니다. 기존 데이터를 불러올까요?',
           );
           toggleIsModalAlertOpen();
-          // 확인 시 요청 후  handleConfirm에 uuid 저장 및 이동
+          // 확인 시 요청 후  handleConfirm에 프로젝트명 저장 및 이동
           return;
         }
         console.error('Error:', response.status);
@@ -96,6 +103,7 @@ const IntroPage = () => {
           title={'프로젝트 컨벤션 메이커'}
           content={alertContent}
           handleIsOpen={toggleIsModalAlertOpen}
+          isConfirm={isConfirm}
           handleConfirm={handleConfirm}
         />
       )}
