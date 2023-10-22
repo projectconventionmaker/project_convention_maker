@@ -15,6 +15,10 @@ const theme = createTheme({
       fontSize: 26,
       fontWeight: 500,
     },
+    h4: {
+      fontSize: 18,
+      fontWeight: 500,
+    },
     subtitle1: {
       fontSize: 16,
       color: '#666666',

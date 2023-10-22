@@ -262,36 +262,30 @@ const Stack = () => {
               alignItems: 'center',
             }}
           >
-            <Typography
-              variant="h3"
-              gutterBottom
+            <Box
               sx={{
-                fontWeight: '400',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
               }}
             >
-              기술 스택
-            </Typography>
+              <img
+                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Crystal%20Ball.png"
+                alt="Crystal Ball"
+                width="60"
+                height="60"
+              />
+              <Typography variant="h2">기술 스택</Typography>
+            </Box>
             <SaveButton />
           </Box>
-          <Grid item xs={12}>
-            <Typography
-              variant="subtitle1"
-              gutterBottom
-              sx={{
-                fontSize: '1.5rem',
-                color: '#666666',
-              }}
-            >
-              팀원 간의 공통된 기술 스택을 공유하면 코드와 리소스를 재사용하기가
-              더 쉬워지며 프로젝트를 빠르게 진행할 수 있습니다.
-            </Typography>
-            <Divider
-              variant="fullWidth"
-              sx={{
-                marginBottom: '2rem',
-              }}
-            />
-          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" gutterBottom>
+            팀원 간의 공통된 기술 스택을 공유하면 코드와 리소스를 재사용하기가
+            더 쉬워지며 프로젝트를 빠르게 진행할 수 있습니다.
+          </Typography>
+          <Divider variant="fullWidth" />
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} sx={{ marginBottom: '30px' }}>
@@ -328,6 +322,7 @@ const Stack = () => {
               })}
             </Grid>
           </Grid>
+          <Divider variant="fullWidth" />
           {language.length >= 1 && (
             <Grid item xs={12} sx={{ marginBottom: '30px' }}>
               <Typography
@@ -339,7 +334,7 @@ const Stack = () => {
               >
                 스타일
               </Typography>
-              <Grid container spacing={2}>
+              <Grid container spacing={2} sx={{ marginBottom: '30px' }}>
                 {STYLE_LIST.map(item => {
                   if (style.includes(item.name)) {
                     return (
@@ -362,6 +357,7 @@ const Stack = () => {
                   }
                 })}
               </Grid>
+              <Divider variant="fullWidth" />
             </Grid>
           )}
           {language.length >= 1 && style.length >= 1 && (
@@ -400,6 +396,7 @@ const Stack = () => {
                   })}
                 </Grid>
               </Grid>
+              <Divider variant="fullWidth" />
               <Grid item xs={12} sx={{ marginBottom: '30px' }}>
                 <Typography
                   variant="h4"
