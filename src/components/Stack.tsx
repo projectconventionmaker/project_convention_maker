@@ -1,8 +1,16 @@
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
-import { useState } from 'react';
-import styles from './Stack.module.scss';
+import {
+  FormControl,
+  FormControlLabel,
+  Typography,
+  Grid,
+  Box,
+  Divider,
+  Chip,
+} from '@mui/material';
+import React, { useState } from 'react';
 import react from '../assets/react.png';
 import vue from '../assets/vue.png';
 import javascript from '../assets/javascript.png';
@@ -156,80 +164,150 @@ const Stack = () => {
   };
 
   return (
-    <form className={styles.container} onSubmit={handleSubmit}>
-      <label>언어</label>
-      <div className={styles.card_wrapper}>
-        {LANGUAGE_LIST.map(item => {
-          if (language.includes(item.name)) {
-            return (
-              <StackItemCard
-                item={item}
-                handleClick={handleLanguageChange}
-                key={item.name}
-                isSelected
-              />
-            );
-          } else {
-            return (
-              <StackItemCard
-                handleClick={handleLanguageChange}
-                item={item}
-                isSelected={false}
-              />
-            );
-          }
-        })}
-      </div>
-      <label>프레임워크 및 라이브러리</label>
-      <div className={styles.card_wrapper}>
-        {FRAMEWORK_LIST.map(item => {
-          if (framework.includes(item.name)) {
-            return (
-              <StackItemCard
-                item={item}
-                handleClick={handleFrameworkChange}
-                key={item.name}
-                isSelected
-              />
-            );
-          } else {
-            return (
-              <StackItemCard
-                handleClick={handleFrameworkChange}
-                item={item}
-                isSelected={false}
-              />
-            );
-          }
-        })}
-        <StackItemAdd />
-      </div>
-      <label>스타일</label>
-      <div className={styles.card_wrapper}>
-        {STYLE_LIST.map(item => {
-          if (style.includes(item.name)) {
-            return (
-              <StackItemCard
-                item={item}
-                handleClick={handleStyleChange}
-                key={item.name}
-                isSelected
-              />
-            );
-          } else {
-            return (
-              <StackItemCard
-                handleClick={handleStyleChange}
-                item={item}
-                isSelected={false}
-              />
-            );
-          }
-        })}
-        <StackItemAdd />
-      </div>
-      <SaveButton />
-    </form>
+    <FormControl component="form" onSubmit={handleSubmit}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Typography
+              variant="h3"
+              gutterBottom
+              sx={{
+                fontWeight: '400',
+              }}
+            >
+              기술 스택
+            </Typography>
+            <SaveButton />
+          </Box>
+          <Grid item xs={12}>
+            <Typography
+              variant="subtitle1"
+              gutterBottom
+              sx={{
+                fontSize: '1.5rem',
+                color: '#666666',
+              }}
+            >
+              팀원 간의 공통된 기술 스택을 공유하면 코드와 리소스를 재사용하기가
+              더 쉬워지며 프로젝트를 빠르게 진행할 수 있습니다.
+            </Typography>
+            <Divider
+              variant="fullWidth"
+              sx={{
+                marginBottom: '2rem',
+              }}
+            />
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container>
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{
+                fontWeight: '400',
+              }}
+            >
+              언어
+            </Typography>
+            <Grid container spacing={2}>
+              {LANGUAGE_LIST.map(item => {
+                if (language.includes(item.name)) {
+                  return (
+                    <StackItemCard
+                      item={item}
+                      handleClick={handleLanguageChange}
+                      key={item.name}
+                      isSelected
+                    />
+                  );
+                } else {
+                  return (
+                    <StackItemCard
+                      handleClick={handleLanguageChange}
+                      item={item}
+                      isSelected={false}
+                    />
+                  );
+                }
+              })}
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{
+                fontWeight: '400',
+              }}
+            >
+              프레임워크 및 라이브러리
+            </Typography>
+            <Grid container spacing={2}>
+              {FRAMEWORK_LIST.map(item => {
+                if (framework.includes(item.name)) {
+                  return (
+                    <StackItemCard
+                      item={item}
+                      handleClick={handleFrameworkChange}
+                      key={item.name}
+                      isSelected
+                    />
+                  );
+                } else {
+                  return (
+                    <StackItemCard
+                      handleClick={handleFrameworkChange}
+                      item={item}
+                      isSelected={false}
+                    />
+                  );
+                }
+              })}
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{
+                fontWeight: '400',
+              }}
+            >
+              스타일
+            </Typography>
+            <Grid container spacing={2}>
+              {STYLE_LIST.map(item => {
+                if (style.includes(item.name)) {
+                  return (
+                    <StackItemCard
+                      item={item}
+                      handleClick={handleStyleChange}
+                      key={item.name}
+                      isSelected
+                    />
+                  );
+                } else {
+                  return (
+                    <StackItemCard
+                      handleClick={handleStyleChange}
+                      item={item}
+                      isSelected={false}
+                    />
+                  );
+                }
+              })}
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </FormControl>
   );
 };
 
@@ -244,35 +322,42 @@ const StackItemCard = ({
   isSelected: boolean;
   handleClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 }) => {
-  // 선택된 경우 active 클래스를 추가
-  const cardClasses = isSelected
-    ? `${styles.itemCard} ${styles.active}`
-    : styles.itemCard;
-
   return (
-    <Card
-      style={{ backgroundColor: isSelected ? 'pink' : 'white' }}
-      variant="outlined"
-      classes={{
-        root: cardClasses,
-      }}
-      data-stack={item.name}
-      onClick={handleClick}
-    >
-      <div>
-        <CardHeader title={item.name} />
-        <CardContent>{item.description}</CardContent>
-      </div>
-      <img src={item.imgUrl} alt={item.name} />
-    </Card>
+    <Grid item xs={4} lg={2.5}>
+      <Card
+        style={{
+          backgroundColor: isSelected ? 'pink' : 'white',
+          display: 'flex',
+          gap: '10px',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '10px',
+        }}
+        variant="outlined"
+        data-stack={item.name}
+        onClick={handleClick}
+      >
+        <div>
+          <CardHeader title={item.name} />
+          <CardContent>{item.description}</CardContent>
+        </div>
+        <img style={{ width: '50px' }} src={item.imgUrl} alt={item.name} />
+      </Card>
+    </Grid>
   );
 };
 
-const StackItemAdd = () => {
+const StackItemAdd = ({
+  handleAddBtnClick,
+}: {
+  handleAddBtnClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}) => {
   return (
     <div>
       <TextField id="outlined-basic" label="Outlined" variant="outlined" />
-      <Button variant="contained">추가</Button>
+      <Button variant="contained" onClick={handleAddBtnClick}>
+        추가
+      </Button>
     </div>
   );
 };
