@@ -239,72 +239,76 @@ const Stack = () => {
               })}
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Typography
-              variant="h4"
-              gutterBottom
-              sx={{
-                fontWeight: '400',
-              }}
-            >
-              프레임워크 및 라이브러리
-            </Typography>
-            <Grid container spacing={2}>
-              {FRAMEWORK_LIST.map(item => {
-                if (framework.includes(item.name)) {
-                  return (
-                    <StackItemCard
-                      item={item}
-                      handleClick={handleFrameworkChange}
-                      key={item.name}
-                      isSelected
-                    />
-                  );
-                } else {
-                  return (
-                    <StackItemCard
-                      handleClick={handleFrameworkChange}
-                      item={item}
-                      isSelected={false}
-                    />
-                  );
-                }
-              })}
+          {language.length >= 1 && (
+            <Grid item xs={12}>
+              <Typography
+                variant="h4"
+                gutterBottom
+                sx={{
+                  fontWeight: '400',
+                }}
+              >
+                프레임워크 및 라이브러리
+              </Typography>
+              <Grid container spacing={2}>
+                {FRAMEWORK_LIST.map(item => {
+                  if (framework.includes(item.name)) {
+                    return (
+                      <StackItemCard
+                        item={item}
+                        handleClick={handleFrameworkChange}
+                        key={item.name}
+                        isSelected
+                      />
+                    );
+                  } else {
+                    return (
+                      <StackItemCard
+                        handleClick={handleFrameworkChange}
+                        item={item}
+                        isSelected={false}
+                      />
+                    );
+                  }
+                })}
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography
-              variant="h4"
-              gutterBottom
-              sx={{
-                fontWeight: '400',
-              }}
-            >
-              스타일
-            </Typography>
-            <Grid container spacing={2}>
-              {STYLE_LIST.map(item => {
-                if (style.includes(item.name)) {
-                  return (
-                    <StackItemCard
-                      item={item}
-                      handleClick={handleStyleChange}
-                      key={item.name}
-                      isSelected
-                    />
-                  );
-                } else {
-                  return (
-                    <StackItemCard
-                      handleClick={handleStyleChange}
-                      item={item}
-                      isSelected={false}
-                    />
-                  );
-                }
-              })}
+          )}
+          {language.length >= 1 && (
+            <Grid item xs={12}>
+              <Typography
+                variant="h4"
+                gutterBottom
+                sx={{
+                  fontWeight: '400',
+                }}
+              >
+                스타일
+              </Typography>
+              <Grid container spacing={2}>
+                {STYLE_LIST.map(item => {
+                  if (style.includes(item.name)) {
+                    return (
+                      <StackItemCard
+                        item={item}
+                        handleClick={handleStyleChange}
+                        key={item.name}
+                        isSelected
+                      />
+                    );
+                  } else {
+                    return (
+                      <StackItemCard
+                        handleClick={handleStyleChange}
+                        item={item}
+                        isSelected={false}
+                      />
+                    );
+                  }
+                })}
+              </Grid>
             </Grid>
-          </Grid>
+          )}
         </Grid>
       </Grid>
     </FormControl>
