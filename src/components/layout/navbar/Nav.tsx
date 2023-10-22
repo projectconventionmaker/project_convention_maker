@@ -18,7 +18,7 @@ const NAVLIST = [
   { to: '/result', name: '결과 보기', icon: <Flag /> },
 ];
 
-const projectName = localStorage.getItem('data');
+const projectName = localStorage.getItem('project_name');
 const Nav = () => {
   const location = useLocation();
   return (
