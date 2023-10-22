@@ -29,7 +29,7 @@ import jotai from '../assets/jotai.png';
 import reactQuery from '../assets/react-query.svg';
 import zustand from '../assets/zustand.png';
 import cypress from '../assets/cypress.png';
-import { Button, Theme, makeStyles } from '@mui/material';
+import { Button } from '@mui/material';
 import SaveButton from '../components/Button';
 import TextField from '@mui/material/TextField';
 
@@ -206,7 +206,7 @@ const Stack = () => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Grid container>
+          <Grid item xs={12} sx={{ marginBottom: '30px' }}>
             <Typography
               variant="h4"
               gutterBottom
@@ -240,7 +240,7 @@ const Stack = () => {
             </Grid>
           </Grid>
           {language.length >= 1 && (
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{ marginBottom: '30px' }}>
               <Typography
                 variant="h4"
                 gutterBottom
@@ -275,7 +275,7 @@ const Stack = () => {
             </Grid>
           )}
           {language.length >= 1 && (
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{ marginBottom: '30px' }}>
               <Typography
                 variant="h4"
                 gutterBottom
@@ -329,13 +329,16 @@ const StackItemCard = ({
   return (
     <Grid item xs={4} lg={2.5}>
       <Card
-        style={{
-          backgroundColor: isSelected ? 'pink' : 'white',
+        sx={{
+          border: isSelected ? '#1976d2 solid 5px' : 'white solid 5px',
           display: 'flex',
           gap: '10px',
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '10px',
+          '&:hover': {
+            border: '#1976d2 solid 5px',
+          },
         }}
         variant="outlined"
         data-stack={item.name}
