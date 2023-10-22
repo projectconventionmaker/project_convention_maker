@@ -5,3 +5,7 @@ html {
 body {
   margin: 0;
 }
+
+main {
+  /* width: calc(100% - 20rem); */
+}
