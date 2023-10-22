@@ -45,22 +45,41 @@ const GroundRulePage = () => {
   }, []);
   return (
     <FormControl fullWidth>
-      <Grid
-        spacing={2}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Grid>
-          <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
-            그라운드 룰
-          </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
+              <img
+                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Hamsa.png"
+                alt="Hamsa"
+                width="60"
+                height="60"
+              />
+              <Typography variant="h2">그라운드룰</Typography>
+            </Box>
+            <SaveButton />
+          </Box>
         </Grid>
-        <Grid>
-          <SaveButton />
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" gutterBottom>
+            그라운드룰 설명
+          </Typography>
+          <Divider variant="fullWidth" />
         </Grid>
       </Grid>
-      <Grid>
+      <Box sx={{ paddingTop: 2 }}>
         {GROUND_RULE.map((rule, _) => (
           <Grid key={rule}>
             <FormControlLabel
@@ -75,7 +94,7 @@ const GroundRulePage = () => {
             />
           </Grid>
         ))}
-      </Grid>
+      </Box>
     </FormControl>
   );
 };
