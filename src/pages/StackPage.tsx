@@ -1,16 +1,21 @@
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardContent from '@mui/material/CardContent';
 import {
+  Button,
+  Card,
+  CardHeader,
+  CardContent,
   FormControl,
-  FormControlLabel,
   Typography,
   Grid,
   Box,
   Divider,
   Chip,
+  TextField,
 } from '@mui/material';
+import SaveButton from '../components/Button';
+import ModalAlert from '../components/ModalAlert';
+
 import React, { useState } from 'react';
+
 import react from '../assets/react.png';
 import vue from '../assets/vue.png';
 import javascript from '../assets/javascript.png';
@@ -29,9 +34,6 @@ import jotai from '../assets/jotai.png';
 import reactQuery from '../assets/react-query.svg';
 import zustand from '../assets/zustand.png';
 import cypress from '../assets/cypress.png';
-import { Button } from '@mui/material';
-import SaveButton from '../components/Button';
-import TextField from '@mui/material/TextField';
 
 interface StackItemType {
   name: string;
@@ -113,8 +115,16 @@ const STYLE_LIST: StackItemType[] = [
 const Stack = () => {
   // 받아온 데이터 배열화 필요
   const [language, setLanguage] = useState<string[]>([]);
-  const [framework, setFramework] = useState<string[]>(['React', 'Vue']);
-  const [style, setStyle] = useState<string[]>(['SASS']);
+  const [framework, setFramework] = useState<string[]>([]);
+  const [style, setStyle] = useState<string[]>([]);
+  const [etc, setEtc] = useState<string[]>([]);
+
+  const [isModalAlertOpen, setIsModalAlert] = useState(false);
+  const [alertContent, setAlertContent] = useState('');
+
+  const toggleIsModalAlertOpen = () => {
+    setIsModalAlert(prev => !prev);
+  };
 
   //** 언어를 선택해서 배열에 담는 함수 */
   const handleLanguageChange = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -124,7 +134,8 @@ const Stack = () => {
       setLanguage(prev => prev.filter(item => item !== selectedStack));
     } else {
       if (language.length === 1) {
-        alert('언어는 하나만 선택할 수 있습니다.');
+        setAlertContent('언어는 하나만 선택할 수 있습니다.');
+        toggleIsModalAlertOpen();
         return;
       }
       setLanguage(prev => [...prev, selectedStack!]);
@@ -153,6 +164,19 @@ const Stack = () => {
     }
   };
 
+  const handleEtcDelete = (name: string) => {
+    setEtc(prev => prev.filter(item => item !== name));
+  };
+
+  const handleEtcAdd = (name: string) => {
+    if (etc.includes(name)) {
+      setAlertContent('이미 사용하는 라이브러리입니다.');
+      toggleIsModalAlertOpen();
+      return;
+    }
+    setEtc(prev => [...prev, name]);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -161,6 +185,7 @@ const Stack = () => {
       frameworks: framework.map(item => ({ name: item })),
       styles: style.map(item => ({ name: item })),
     });
+    console.log(etc);
   };
 
   return (
@@ -248,41 +273,6 @@ const Stack = () => {
                   fontWeight: '400',
                 }}
               >
-                프레임워크 및 라이브러리
-              </Typography>
-              <Grid container spacing={2}>
-                {FRAMEWORK_LIST.map(item => {
-                  if (framework.includes(item.name)) {
-                    return (
-                      <StackItemCard
-                        item={item}
-                        handleClick={handleFrameworkChange}
-                        key={item.name}
-                        isSelected
-                      />
-                    );
-                  } else {
-                    return (
-                      <StackItemCard
-                        handleClick={handleFrameworkChange}
-                        item={item}
-                        isSelected={false}
-                      />
-                    );
-                  }
-                })}
-              </Grid>
-            </Grid>
-          )}
-          {language.length >= 1 && (
-            <Grid item xs={12} sx={{ marginBottom: '30px' }}>
-              <Typography
-                variant="h4"
-                gutterBottom
-                sx={{
-                  fontWeight: '400',
-                }}
-              >
                 스타일
               </Typography>
               <Grid container spacing={2}>
@@ -309,8 +299,78 @@ const Stack = () => {
               </Grid>
             </Grid>
           )}
+          {language.length >= 1 && style.length >= 1 && (
+            <>
+              <Grid item xs={12} sx={{ marginBottom: '30px' }}>
+                <Typography
+                  variant="h4"
+                  gutterBottom
+                  sx={{
+                    fontWeight: '400',
+                  }}
+                >
+                  프레임워크 및 라이브러리
+                </Typography>
+                <Grid container spacing={2}>
+                  {FRAMEWORK_LIST.map(item => {
+                    if (framework.includes(item.name)) {
+                      return (
+                        <StackItemCard
+                          item={item}
+                          handleClick={handleFrameworkChange}
+                          key={item.name}
+                          isSelected
+                        />
+                      );
+                    } else {
+                      return (
+                        <StackItemCard
+                          handleClick={handleFrameworkChange}
+                          item={item}
+                          isSelected={false}
+                        />
+                      );
+                    }
+                  })}
+                </Grid>
+              </Grid>
+              <Grid item xs={12} sx={{ marginBottom: '30px' }}>
+                <Typography
+                  variant="h4"
+                  gutterBottom
+                  sx={{
+                    fontWeight: '400',
+                  }}
+                >
+                  기타
+                </Typography>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={{ display: 'flex', gap: '10px', padding: '20px' }}
+                >
+                  {etc.map(item => (
+                    <EctItem
+                      data={item}
+                      handleEtcDelete={handleEtcDelete}
+                      key={item}
+                    />
+                  ))}
+                </Grid>
+              </Grid>
+              {<StackItemAdd handleAddBtnClick={handleEtcAdd} />}
+            </>
+          )}
         </Grid>
       </Grid>
+      {isModalAlertOpen && (
+        <ModalAlert
+          isOpen={isModalAlertOpen}
+          title={'프로젝트 컨벤션 메이커'}
+          content={alertContent}
+          handleIsOpen={toggleIsModalAlertOpen}
+        />
+      )}
     </FormControl>
   );
 };
@@ -357,14 +417,46 @@ const StackItemCard = ({
 const StackItemAdd = ({
   handleAddBtnClick,
 }: {
-  handleAddBtnClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  handleAddBtnClick: (name: string) => void;
 }) => {
+  const [name, setName] = useState('');
+
   return (
     <div>
-      <TextField id="outlined-basic" label="Outlined" variant="outlined" />
-      <Button variant="contained" onClick={handleAddBtnClick}>
+      <TextField
+        id="outlined-basic"
+        label="Outlined"
+        variant="outlined"
+        onChange={e => {
+          setName(e.target.value);
+        }}
+      />
+      <Button
+        variant="contained"
+        onClick={() => {
+          handleAddBtnClick(name);
+          setName('');
+        }}
+      >
         추가
       </Button>
     </div>
+  );
+};
+
+const EctItem = ({
+  data,
+  handleEtcDelete,
+}: {
+  data: string;
+  handleEtcDelete: (name: string) => void;
+}) => {
+  return (
+    <Chip
+      label={data}
+      onDelete={() => {
+        handleEtcDelete(data);
+      }}
+    />
   );
 };
