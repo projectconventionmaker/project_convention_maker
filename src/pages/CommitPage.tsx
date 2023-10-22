@@ -6,7 +6,6 @@ import {
   Grid,
   Box,
   Divider,
-  Chip,
 } from '@mui/material';
 import SaveButton from '../components/Button';
 import { FormEvent } from 'react';
@@ -47,50 +46,25 @@ const CommitPage = () => {
               alignItems: 'center',
             }}
           >
-            <Typography
-              variant="h3"
-              gutterBottom
-              sx={{
-                fontWeight: '400',
-              }}
-            >
+            <Typography variant="h2" gutterBottom>
               💌 커밋 컨벤션
             </Typography>
             <SaveButton />
           </Box>
         </Grid>
         <Grid item xs={12}>
-          <Typography
-            variant="subtitle1"
-            gutterBottom
-            sx={{
-              fontSize: '1.5rem',
-              color: '#666666',
-            }}
-          >
+          <Typography variant="subtitle1" gutterBottom>
             팀원과 소통을 원활히 하고, 코드 변경사항을 편리하게 확인하기 위해
             좋은 커밋메시지를 작성해야 합니다.
           </Typography>
-          <Divider
-            variant="fullWidth"
-            sx={{
-              marginBottom: '2rem',
-            }}
-          />
+          <Divider variant="fullWidth" />
         </Grid>
 
         {COMMIT_MESSAGES.map((message, _) => (
           <Grid item key={message} xs={12} lg={6}>
             <FormControlLabel
-              control={
-                <Checkbox
-                  name={message}
-                  sx={{
-                    fontSize: '1.4rem',
-                  }}
-                />
-              }
-              label={<div style={{ fontSize: '1.6rem' }}>{message}</div>}
+              control={<Checkbox name={message} />}
+              label={message}
             />
           </Grid>
         ))}

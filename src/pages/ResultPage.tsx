@@ -1,55 +1,31 @@
 import {
   Grid,
-  Box,
   Typography,
   Divider,
   Card,
   CardHeader,
   CardContent,
 } from '@mui/material';
-import SaveButton from '../components/Button';
 
 const ResultPage = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Typography
-            variant="h2"
-            gutterBottom
-            sx={{
-              fontSize: '3rem',
-              fontWeight: '400',
-            }}
-          >
-            결과 보기
-          </Typography>
-          <SaveButton />
-        </Box>
+        <Typography variant="h2" gutterBottom>
+          결과 보기
+        </Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography
           variant="subtitle1"
           gutterBottom
           sx={{
-            fontSize: '1.5rem',
             color: '#666666',
           }}
         >
           {'팀이릉'}이 선택한 결광비니다.
         </Typography>
-        <Divider
-          variant="fullWidth"
-          sx={{
-            marginBottom: '2rem',
-          }}
-        />
+        <Divider variant="fullWidth" sx={{}} />
       </Grid>
       <Grid item xs={12}>
         <Card elevation={0}>
