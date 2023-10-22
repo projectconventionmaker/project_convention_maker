@@ -1,7 +1,15 @@
 import TextField from '@mui/material/TextField';
-import styles from './Overview.module.scss';
 import { useEffect, useState } from 'react';
-import { Button } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  Typography,
+  Grid,
+  Box,
+  Divider,
+} from '@mui/material';
 import { nanoid } from 'nanoid';
 import SaveButton from './Button';
 import { Dayjs } from 'dayjs';
@@ -76,129 +84,178 @@ const Overview = () => {
   }, []);
 
   return (
-    <form className={styles.container} onSubmit={handleSubmit}>
-      <SaveButton />
-      <div className={styles.boxWrapper}>
-        <div className={styles.boxTitle}>프로젝트 개요</div>
-        <div>
+    <form onSubmit={handleSubmit}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
+              <img
+                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Crystal%20Ball.png"
+                alt="Crystal Ball"
+                width="60"
+                height="60"
+              />
+              <Typography variant="h2">프로젝트 개요</Typography>
+            </Box>
+            <SaveButton />
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" gutterBottom>
+            진행할 프로젝트에 대한 정보를 입력하세요.
+          </Typography>
+          <Divider variant="fullWidth" />
+        </Grid>
+        <Grid item xs={12} sm={6}>
           <TextField
             required
+            fullWidth
             id="outlined-required"
             placeholder="프로젝트 이름"
             onChange={e => {
               setBody(prev => ({ ...prev, project_name: e.target.value }));
             }}
           />
+        </Grid>
+        <Grid item xs={12} sm={6}>
           <TextField
             required
+            fullWidth
             id="outlined-required"
             placeholder="팀 명"
             onChange={e => {
               setBody(prev => ({ ...prev, team_name: e.target.value }));
             }}
           />
-        </div>
-        <TextField
-          required
-          id="outlined-required"
-          placeholder="프로젝트 개요"
-          onChange={e => {
-            setBody(prev => ({ ...prev, summary: e.target.value }));
-          }}
-        />
-      </div>
-      <div>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            label="프로젝트 시작"
-            value={body.project_start}
-            onChange={date => {
-              setBody(prev => ({ ...prev, project_start: date }));
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            required
+            fullWidth
+            id="outlined-required"
+            placeholder="프로젝트 개요"
+            onChange={e => {
+              setBody(prev => ({ ...prev, summary: e.target.value }));
             }}
           />
-          <DatePicker
-            label="프로젝트 종료"
-            value={body.project_end}
-            onChange={date => {
-              setBody(prev => ({ ...prev, project_end: date }));
-            }}
-          />
-        </LocalizationProvider>
-      </div>
-      <div>
-        <div className={styles.boxTitle}>프로젝트 팀원</div>
-        <Button size="large" variant="contained" onClick={addTeammate}>
-          추가
-        </Button>
-      </div>
-      {body.teammate.map(mate => {
-        return (
-          <div key={mate.id}>
-            <TextField
-              required
-              id="outlined-required"
-              placeholder="이름"
-              onChange={e => {
-                const updatedTeammate = body.teammate.map(t => {
-                  if (t.id === mate.id) {
-                    return { ...t, name: e.target.value };
-                  }
-                  return t;
-                });
-                setBody(prev => ({ ...prev, teammate: updatedTeammate }));
-              }}
-            />
-            <TextField
-              required
-              id="outlined-required"
-              placeholder="포지션"
-              onChange={e => {
-                const updatedTeammate = body.teammate.map(t => {
-                  if (t.id === mate.id) {
-                    return { ...t, position: e.target.value };
-                  }
-                  return t;
-                });
-                setBody(prev => ({ ...prev, teammate: updatedTeammate }));
-              }}
-            />
-            <TextField
-              required
-              id="outlined-required"
-              placeholder="깃허브"
-              onChange={e => {
-                const updatedTeammate = body.teammate.map(t => {
-                  if (t.id === mate.id) {
-                    return { ...t, github: e.target.value };
-                  }
-                  return t;
-                });
-                setBody(prev => ({ ...prev, teammate: updatedTeammate }));
-              }}
-            />
-            <Button
-              size="large"
-              variant="contained"
-              onClick={() => {
-                deleteTeammate(mate.id);
+        </Grid>
+
+        <Grid item xs={12}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Box
+              sx={{
+                display: 'flex',
+                gap: 2,
               }}
             >
-              삭제
-            </Button>
-          </div>
-        );
-      })}
-      <div>
-        <div className={styles.boxTitle}>프로젝트 상세</div>
-        <TextField
-          id="standard-basic"
-          label="프로젝트 상세 설명을 입력하세요."
-          variant="standard"
-          onChange={e => {
-            setBody(prev => ({ ...prev, detail: e.target.value }));
-          }}
-        />
-      </div>
+              <DatePicker
+                label="프로젝트 시작"
+                value={body.project_start}
+                onChange={date => {
+                  setBody(prev => ({ ...prev, project_start: date }));
+                }}
+                sx={{ flexGrow: 1 }}
+              />
+              <DatePicker
+                label="프로젝트 종료"
+                value={body.project_end}
+                onChange={date => {
+                  setBody(prev => ({ ...prev, project_end: date }));
+                }}
+                sx={{ flexGrow: 1 }}
+              />
+            </Box>
+          </LocalizationProvider>
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            multiline
+            rows={4}
+            id="standard-basic"
+            label="프로젝트 상세 설명을 입력하세요."
+            onChange={e => {
+              setBody(prev => ({ ...prev, detail: e.target.value }));
+            }}
+          />
+        </Grid>
+
+        <div>
+          <div>프로젝트 팀원</div>
+          <Button size="large" variant="contained" onClick={addTeammate}>
+            추가
+          </Button>
+        </div>
+        {body.teammate.map(mate => {
+          return (
+            <div key={mate.id}>
+              <TextField
+                required
+                id="outlined-required"
+                placeholder="이름"
+                onChange={e => {
+                  const updatedTeammate = body.teammate.map(t => {
+                    if (t.id === mate.id) {
+                      return { ...t, name: e.target.value };
+                    }
+                    return t;
+                  });
+                  setBody(prev => ({ ...prev, teammate: updatedTeammate }));
+                }}
+              />
+              <TextField
+                required
+                id="outlined-required"
+                placeholder="포지션"
+                onChange={e => {
+                  const updatedTeammate = body.teammate.map(t => {
+                    if (t.id === mate.id) {
+                      return { ...t, position: e.target.value };
+                    }
+                    return t;
+                  });
+                  setBody(prev => ({ ...prev, teammate: updatedTeammate }));
+                }}
+              />
+              <TextField
+                required
+                id="outlined-required"
+                placeholder="깃허브"
+                onChange={e => {
+                  const updatedTeammate = body.teammate.map(t => {
+                    if (t.id === mate.id) {
+                      return { ...t, github: e.target.value };
+                    }
+                    return t;
+                  });
+                  setBody(prev => ({ ...prev, teammate: updatedTeammate }));
+                }}
+              />
+              <Button
+                size="large"
+                variant="contained"
+                onClick={() => {
+                  deleteTeammate(mate.id);
+                }}
+              >
+                삭제
+              </Button>
+            </div>
+          );
+        })}
+      </Grid>
     </form>
   );
 };
