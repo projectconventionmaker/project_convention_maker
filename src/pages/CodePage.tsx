@@ -1,7 +1,15 @@
-import { Box, Button, Stack, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Stack,
+  TextField,
+  Typography,
+  Divider,
+  Grid,
+} from '@mui/material';
 import { useState } from 'react';
 import { nanoid } from 'nanoid';
-
+import SaveButton from '../components/Button';
 type CategoryType = {
   id: string;
 };
@@ -22,45 +30,76 @@ export default function CodePage() {
   };
 
   return (
-    <Box>
-      <Typography variant="h5" component="p" marginBottom={2}>
-        코드 컨벤션
-      </Typography>
-      <Typography variant="body1" marginBottom={2}>
-        코드 컨벤션을 적어놓으면 이런 점이 좋답니다.
-      </Typography>
-      <Button
-        onClick={() => {
-          setCategoryList([
-            ...categoryList,
-            {
-              id: nanoid(),
-            },
-          ]);
-        }}
-        variant="contained"
-        color="primary"
-        size="large"
-        endIcon={
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2,
+            }}
           >
-            <path
-              d="M9.70492 6L8.29492 7.41L12.8749 12L8.29492 16.59L9.70492 18L15.7049 12L9.70492 6Z"
-              fill="white"
+            <img
+              src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Keyboard.webp"
+              alt="Keyboard"
+              width="60"
+              height="60"
             />
-          </svg>
-        }
-      >
-        카테고리 시작하기
-      </Button>
+            <Typography variant="h2">코드 컨벤션</Typography>
+          </Box>
+          <SaveButton />
+        </Box>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="subtitle1" gutterBottom>
+          팀원과 소통을 원활히 하고, 코드 변경사항을 편리하게 확인하기 위해 좋은
+          커밋메시지를 작성해야 합니다.
+        </Typography>
+        <Divider variant="fullWidth" />
+      </Grid>
+      <Grid item xs={12}>
+        <Button
+          onClick={() => {
+            setCategoryList([
+              ...categoryList,
+              {
+                id: nanoid(),
+              },
+            ]);
+          }}
+          variant="contained"
+          color="primary"
+          size="large"
+          endIcon={
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.70492 6L8.29492 7.41L12.8749 12L8.29492 16.59L9.70492 18L15.7049 12L9.70492 6Z"
+                fill="white"
+              />
+            </svg>
+          }
+        >
+          카테고리 시작하기
+        </Button>
+      </Grid>
+
       <Stack
         marginTop={4}
         sx={{
+          paddingLeft: '16px',
           '& > div:not(:last-child)::after': {
             content: '""',
             display: 'block',
@@ -80,7 +119,7 @@ export default function CodePage() {
           );
         })}
       </Stack>
-    </Box>
+    </Grid>
   );
 }
 
