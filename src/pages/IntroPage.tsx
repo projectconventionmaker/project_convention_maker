@@ -1,9 +1,12 @@
 import TextField from '@mui/material/TextField';
 import { Button, FormControl, Typography, Box } from '@mui/material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const IntroPage = () => {
   const [projectName, setProjectName] = useState('');
+  const navigator = useNavigate();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -20,6 +23,12 @@ const IntroPage = () => {
       if (response.ok) {
         const jsonResponse = await response.json();
         localStorage.setItem('data', JSON.stringify(jsonResponse));
+        localStorage.setItem('id', jsonResponse.project_detail.project_uuid);
+        localStorage.setItem(
+          'project_name',
+          jsonResponse.project_detail.project_name,
+        );
+        navigator('/overview');
       } else {
         console.error('Error:', response.status);
       }
