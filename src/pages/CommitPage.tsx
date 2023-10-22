@@ -8,7 +8,8 @@ import {
   Divider,
 } from '@mui/material';
 import SaveButton from '../components/Button';
-import { FormEvent } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const COMMIT_MESSAGES = [
   '[feat] : 기능 추가, 삭제, 변경',
@@ -25,15 +26,86 @@ const COMMIT_MESSAGES = [
 ];
 
 const CommitPage = () => {
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const [commitData, setCommitData] = useState<
+    { name: string; checked: boolean }[]
+  >([]);
+
+  const navigator = useNavigate();
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    console.log(
-      Array.from(formData.entries())
-        .filter(([key, value]) => value === 'on')
-        .map(([key, value]) => key),
-    );
+
+    try {
+      const response = await fetch(
+        `https://api.pcmk.dppr.me/api/v1/projects/${
+          localStorage.getItem('project_name') ?? localStorage.getItem('id')
+        }/commit-conventions`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ code_conventions: commitData }),
+        },
+      );
+      // 스택 저장 후 그라운드롤 이동
+      if (response.ok) {
+        navigator('/code');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const message = e.target.name;
+
+    setCommitData(prev => {
+      const foundIndex = prev.findIndex(item => item.name === message);
+
+      if (foundIndex !== -1) {
+        // 메시지가 이미 있는 경우, 해당 메시지의 체크 상태를 토글
+        const updatedItem = {
+          ...prev[foundIndex],
+          checked: !prev[foundIndex].checked,
+        };
+        const updatedData = [...prev];
+        updatedData[foundIndex] = updatedItem;
+        return updatedData;
+      } else {
+        // 메시지가 없는 경우, 새로운 메시지를 추가
+        return [...prev, { name: message, checked: false }];
+      }
+    });
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://api.pcmk.dppr.me/api/v1/projects/${
+            localStorage.getItem('project_name') ?? localStorage.getItem('id')
+          }`,
+        );
+
+        if (response.ok) {
+          const jsonResponse = await response.json();
+
+          if (!jsonResponse.commit_convention) {
+            setCommitData([]);
+          } else {
+            setCommitData(jsonResponse.commit_convention.elements);
+          }
+        } else {
+          console.error('GET Error:', response.status);
+        }
+      } catch (error) {
+        console.error('GET Error:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <FormControl component="form" onSubmit={onSubmit}>
@@ -63,7 +135,15 @@ const CommitPage = () => {
         {COMMIT_MESSAGES.map((message, _) => (
           <Grid item key={message} xs={12} lg={6}>
             <FormControlLabel
-              control={<Checkbox name={message} />}
+              control={
+                <Checkbox
+                  name={message}
+                  checked={commitData.some(
+                    item => item.name === message && item.checked,
+                  )}
+                  onChange={handleCheckboxChange}
+                />
+              }
               label={message}
             />
           </Grid>
