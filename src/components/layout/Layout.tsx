@@ -41,6 +41,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <AppBar
           position="fixed"
           sx={{
+            backgroundColor: 'white',
             zIndex: theme =>
               sideBarState ? theme.zIndex.drawer - 1 : theme.zIndex.drawer + 1,
           }}
@@ -56,15 +57,27 @@ const Layout = ({ children }: { children: ReactNode }) => {
             >
               <MenuIcon />
             </ButtonBase>
-            <Typography variant="h1">프로젝트 컨벤션 메이커</Typography>
-            <Button
-              size="large"
-              variant="contained"
-              color="secondary"
-              onClick={() => setIsLogoutModalOpen(true)}
+            <Box
+              sx={{
+                display: 'flex',
+                width: '100%',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
             >
-              프로젝트 변경
-            </Button>
+              <Typography variant="h1">프로젝트 컨벤션 메이커</Typography>
+              <Button
+                size="large"
+                variant="contained"
+                sx={{
+                  background:
+                    'linear-gradient(101.83deg, rgb(127, 135, 224) -13.2%, rgb(38, 73, 202) -13.19%, rgb(106, 118, 223) 46.63%, rgb(50, 176, 247) 107.09%)',
+                }}
+                onClick={() => setIsLogoutModalOpen(true)}
+              >
+                프로젝트 변경
+              </Button>
+            </Box>
           </Toolbar>
         </AppBar>
 
