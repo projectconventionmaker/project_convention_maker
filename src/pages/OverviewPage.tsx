@@ -7,7 +7,7 @@ import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Grid, Typography, FormControl } from '@mui/material';
+import { Grid, Typography, FormControl, Box, Divider } from '@mui/material';
 
 interface Teammate {
   id: string;
@@ -79,25 +79,42 @@ const OverviewPage = () => {
   }, []);
 
   return (
-    <FormControl component="form" onSubmit={handleSubmit} fullWidth>
-      <Grid
-        spacing={2}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Grid>
-          <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
+    <FormControl component="form" onSubmit={handleSubmit}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
+              <img
+                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Party%20Popper.png"
+                alt="Party Popper"
+                width="60"
+                height="60"
+              />
+              <Typography variant="h2">프로젝트 개요</Typography>
+            </Box>
+            <SaveButton />
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" gutterBottom>
             프로젝트 개요
           </Typography>
+          <Divider variant="fullWidth" />
         </Grid>
 
-        <Grid>
-          <SaveButton />
-        </Grid>
-      </Grid>
-      <Grid container spacing={2} marginBottom={2}>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6}>
           <TextField
             required
             fullWidth
@@ -108,7 +125,7 @@ const OverviewPage = () => {
             }}
           />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6}>
           <TextField
             required
             fullWidth
@@ -119,9 +136,7 @@ const OverviewPage = () => {
             }}
           />
         </Grid>
-      </Grid>
-      <Grid container>
-        <Grid item xs={5}>
+        <Grid item xs={12}>
           <TextField
             required
             fullWidth
@@ -132,34 +147,50 @@ const OverviewPage = () => {
             }}
           />
         </Grid>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            multiline
+            rows={4}
+            id="standard-basic"
+            label="프로젝트 상세 설명을 입력하세요."
+            onChange={e => {
+              setBody(prev => ({ ...prev, detail: e.target.value }));
+            }}
+          />
+        </Grid>
       </Grid>
-
       <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
         프로젝트 기간
       </Typography>
 
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Grid spacing={2} container xs={6} marginBottom={2}>
-          <Grid item xs={3}>
+      <Grid item xs={12}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 2,
+            }}
+          >
             <DatePicker
               label="프로젝트 시작"
               value={body.project_start}
               onChange={date => {
                 setBody(prev => ({ ...prev, project_start: date }));
               }}
+              sx={{ flexGrow: 1 }}
             />
-          </Grid>
-          <Grid item xs={3}>
             <DatePicker
               label="프로젝트 종료"
               value={body.project_end}
               onChange={date => {
                 setBody(prev => ({ ...prev, project_end: date }));
               }}
+              sx={{ flexGrow: 1 }}
             />
-          </Grid>
-        </Grid>
-      </LocalizationProvider>
+          </Box>
+        </LocalizationProvider>
+      </Grid>
 
       <Grid spacing={2} container alignItems="center" xs={6}>
         <Grid item>
@@ -245,20 +276,6 @@ const OverviewPage = () => {
           </Grid>
         );
       })}
-
-      <Typography variant="h5" component="p" marginTop={2} marginBottom={2}>
-        프로젝트 상세
-      </Typography>
-      <TextField
-        id="standard-basic"
-        multiline
-        fullWidth
-        label="프로젝트 상세 설명을 입력하세요."
-        variant="standard"
-        onChange={e => {
-          setBody(prev => ({ ...prev, detail: e.target.value }));
-        }}
-      />
     </FormControl>
   );
 };
