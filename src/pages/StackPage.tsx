@@ -30,7 +30,7 @@ import reactQuery from '../assets/react-query.svg';
 import zustand from '../assets/zustand.png';
 import cypress from '../assets/cypress.png';
 import { Button, Theme, makeStyles } from '@mui/material';
-import SaveButton from './Button';
+import SaveButton from '../components/Button';
 import TextField from '@mui/material/TextField';
 
 interface StackItemType {

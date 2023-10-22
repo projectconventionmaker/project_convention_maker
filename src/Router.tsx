@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import IntroPage from './pages/IntroPage';
 import ResultPage from './pages/ResultPage';
-import Stack from './components/Stack';
+import Stack from './pages/StackPage';
 import Overview from './components/Overview';
 import CommitPage from './pages/CommitPage';
 
