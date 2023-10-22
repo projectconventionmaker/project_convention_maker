@@ -1,21 +1,13 @@
 import TextField from '@mui/material/TextField';
 import { useEffect, useState } from 'react';
-import {
-  Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  Typography,
-  Grid,
-  Box,
-  Divider,
-} from '@mui/material';
+import { Button } from '@mui/material';
 import { nanoid } from 'nanoid';
-import SaveButton from './Button';
+import SaveButton from '../components/Button';
 import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Grid, Typography, FormControl } from '@mui/material';
 
 interface Teammate {
   id: string;
@@ -34,7 +26,7 @@ interface OverviewData {
   teammate: Teammate[];
 }
 
-const Overview = () => {
+const OverviewPage = () => {
   const [body, setBody] = useState<OverviewData>({
     project_name: '',
     team_name: '',
@@ -76,49 +68,36 @@ const Overview = () => {
   };
 
   useEffect(() => {
-    // const getOverview = async () => {
-    //   const json = await (await fetch('#')).json();
-    //   setBody(json);
-    // };
-    // getOverview();
+    const getOverview = async () => {
+      const projectDetail = localStorage.getItem(data);
+      if (projectDetail) {
+        const parsedData = JSON.parse(projectDetail);
+        setBody(parsedData);
+      }
+    };
+    getOverview();
   }, []);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 2,
-              }}
-            >
-              <img
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Crystal%20Ball.png"
-                alt="Crystal Ball"
-                width="60"
-                height="60"
-              />
-              <Typography variant="h2">프로젝트 개요</Typography>
-            </Box>
-            <SaveButton />
-          </Box>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="subtitle1" gutterBottom>
-            진행할 프로젝트에 대한 정보를 입력하세요.
+    <FormControl component="form" onSubmit={handleSubmit} fullWidth>
+      <Grid
+        spacing={2}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Grid>
+          <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
+            프로젝트 개요
           </Typography>
-          <Divider variant="fullWidth" />
         </Grid>
-        <Grid item xs={12} sm={6}>
+
+        <Grid>
+          <SaveButton />
+        </Grid>
+      </Grid>
+      <Grid container spacing={2} marginBottom={2}>
+        <Grid item xs={3}>
           <TextField
             required
             fullWidth
@@ -129,78 +108,81 @@ const Overview = () => {
             }}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={3}>
           <TextField
             required
             fullWidth
             id="outlined-required"
-            placeholder="팀 명"
+            placeholder="팀 이름"
             onChange={e => {
               setBody(prev => ({ ...prev, team_name: e.target.value }));
             }}
           />
         </Grid>
-        <Grid item xs={12}>
+      </Grid>
+      <Grid container>
+        <Grid item xs={5}>
           <TextField
             required
             fullWidth
             id="outlined-required"
-            placeholder="프로젝트 개요"
+            placeholder="프로젝트 한 줄 요약"
             onChange={e => {
               setBody(prev => ({ ...prev, summary: e.target.value }));
             }}
           />
         </Grid>
+      </Grid>
 
-        <Grid item xs={12}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Box
-              sx={{
-                display: 'flex',
-                gap: 2,
+      <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
+        프로젝트 기간
+      </Typography>
+
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Grid spacing={2} container xs={6} marginBottom={2}>
+          <Grid item xs={3}>
+            <DatePicker
+              label="프로젝트 시작"
+              value={body.project_start}
+              onChange={date => {
+                setBody(prev => ({ ...prev, project_start: date }));
               }}
-            >
-              <DatePicker
-                label="프로젝트 시작"
-                value={body.project_start}
-                onChange={date => {
-                  setBody(prev => ({ ...prev, project_start: date }));
-                }}
-                sx={{ flexGrow: 1 }}
-              />
-              <DatePicker
-                label="프로젝트 종료"
-                value={body.project_end}
-                onChange={date => {
-                  setBody(prev => ({ ...prev, project_end: date }));
-                }}
-                sx={{ flexGrow: 1 }}
-              />
-            </Box>
-          </LocalizationProvider>
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <DatePicker
+              label="프로젝트 종료"
+              value={body.project_end}
+              onChange={date => {
+                setBody(prev => ({ ...prev, project_end: date }));
+              }}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            multiline
-            rows={4}
-            id="standard-basic"
-            label="프로젝트 상세 설명을 입력하세요."
-            onChange={e => {
-              setBody(prev => ({ ...prev, detail: e.target.value }));
-            }}
-          />
-        </Grid>
+      </LocalizationProvider>
 
-        <div>
-          <div>프로젝트 팀원</div>
+      <Grid spacing={2} container alignItems="center" xs={6}>
+        <Grid item>
+          <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
+            프로젝트 팀원
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
           <Button size="large" variant="contained" onClick={addTeammate}>
             추가
           </Button>
-        </div>
-        {body.teammate.map(mate => {
-          return (
-            <div key={mate.id}>
+        </Grid>
+      </Grid>
+      {body.teammate.map(mate => {
+        return (
+          <Grid
+            key={mate.id}
+            container
+            xs={7}
+            alignItems="center"
+            marginBottom={2}
+          >
+            <Grid item xs={3}>
               <TextField
                 required
                 id="outlined-required"
@@ -215,6 +197,8 @@ const Overview = () => {
                   setBody(prev => ({ ...prev, teammate: updatedTeammate }));
                 }}
               />
+            </Grid>
+            <Grid item xs={3}>
               <TextField
                 required
                 id="outlined-required"
@@ -229,10 +213,13 @@ const Overview = () => {
                   setBody(prev => ({ ...prev, teammate: updatedTeammate }));
                 }}
               />
+            </Grid>
+            <Grid item xs={3}>
               <TextField
                 required
                 id="outlined-required"
                 placeholder="깃허브"
+                fullWidth
                 onChange={e => {
                   const updatedTeammate = body.teammate.map(t => {
                     if (t.id === mate.id) {
@@ -243,6 +230,8 @@ const Overview = () => {
                   setBody(prev => ({ ...prev, teammate: updatedTeammate }));
                 }}
               />
+            </Grid>
+            <Grid item xs={2} style={{ marginLeft: 10 }}>
               <Button
                 size="large"
                 variant="contained"
@@ -252,12 +241,26 @@ const Overview = () => {
               >
                 삭제
               </Button>
-            </div>
-          );
-        })}
-      </Grid>
-    </form>
+            </Grid>
+          </Grid>
+        );
+      })}
+
+      <Typography variant="h5" component="p" marginTop={2} marginBottom={2}>
+        프로젝트 상세
+      </Typography>
+      <TextField
+        id="standard-basic"
+        multiline
+        fullWidth
+        label="프로젝트 상세 설명을 입력하세요."
+        variant="standard"
+        onChange={e => {
+          setBody(prev => ({ ...prev, detail: e.target.value }));
+        }}
+      />
+    </FormControl>
   );
 };
 
-export default Overview;
+export default OverviewPage;

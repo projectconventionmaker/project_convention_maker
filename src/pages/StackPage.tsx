@@ -1,16 +1,21 @@
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardContent from '@mui/material/CardContent';
 import {
+  Button,
+  Card,
+  CardHeader,
+  CardContent,
   FormControl,
-  FormControlLabel,
   Typography,
   Grid,
   Box,
   Divider,
   Chip,
+  TextField,
 } from '@mui/material';
-import React, { useState } from 'react';
+import SaveButton from '../components/Button';
+import ModalAlert from '../components/ModalAlert';
+
+import React, { useState, useEffect } from 'react';
+
 import react from '../assets/react.png';
 import vue from '../assets/vue.png';
 import javascript from '../assets/javascript.png';
@@ -29,9 +34,7 @@ import jotai from '../assets/jotai.png';
 import reactQuery from '../assets/react-query.svg';
 import zustand from '../assets/zustand.png';
 import cypress from '../assets/cypress.png';
-import { Button } from '@mui/material';
-import SaveButton from '../components/Button';
-import TextField from '@mui/material/TextField';
+import { useNavigate } from 'react-router-dom';
 
 interface StackItemType {
   name: string;
@@ -113,8 +116,18 @@ const STYLE_LIST: StackItemType[] = [
 const Stack = () => {
   // 받아온 데이터 배열화 필요
   const [language, setLanguage] = useState<string[]>([]);
-  const [framework, setFramework] = useState<string[]>(['React', 'Vue']);
-  const [style, setStyle] = useState<string[]>(['SASS']);
+  const [framework, setFramework] = useState<string[]>([]);
+  const [style, setStyle] = useState<string[]>([]);
+  const [etc, setEtc] = useState<string[]>([]);
+
+  const [isModalAlertOpen, setIsModalAlert] = useState(false);
+  const [alertContent, setAlertContent] = useState('');
+
+  const navigator = useNavigate();
+
+  const toggleIsModalAlertOpen = () => {
+    setIsModalAlert(prev => !prev);
+  };
 
   //** 언어를 선택해서 배열에 담는 함수 */
   const handleLanguageChange = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -124,7 +137,8 @@ const Stack = () => {
       setLanguage(prev => prev.filter(item => item !== selectedStack));
     } else {
       if (language.length === 1) {
-        alert('언어는 하나만 선택할 수 있습니다.');
+        setAlertContent('언어는 하나만 선택할 수 있습니다.');
+        toggleIsModalAlertOpen();
         return;
       }
       setLanguage(prev => [...prev, selectedStack!]);
@@ -153,15 +167,89 @@ const Stack = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleEtcDelete = (name: string) => {
+    setEtc(prev => prev.filter(item => item !== name));
+  };
+
+  const handleEtcAdd = (name: string) => {
+    if (etc.includes(name)) {
+      setAlertContent('이미 사용하는 라이브러리입니다.');
+      toggleIsModalAlertOpen();
+      return;
+    }
+    setEtc(prev => [...prev, name]);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log({
-      languages: language.map(item => ({ name: item })),
-      frameworks: framework.map(item => ({ name: item })),
-      styles: style.map(item => ({ name: item })),
+    const body = JSON.stringify({
+      tech_stack: [
+        { category: 'Language', names: language },
+        { category: 'Styles', names: style },
+        { category: 'Framework', names: framework },
+        { category: 'Etc', names: etc },
+      ],
     });
+    try {
+      const response = await fetch(
+        `https://api.pcmk.dppr.me/api/v1/projects/${
+          localStorage.getItem('project_name') ?? localStorage.getItem('id')
+        }/tech-stack`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body,
+        },
+      );
+      // 스택 저장 후 그라운드롤 이동
+      if (response.ok) {
+        navigator('/groundrule');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://api.pcmk.dppr.me/api/v1/projects/${
+            localStorage.getItem('project_name') ?? localStorage.getItem('id')
+          }`,
+        );
+
+        if (response.ok) {
+          const jsonResponse = await response.json();
+          jsonResponse.tech_stack.elements.map(
+            (el: { category: string; names: string[] }) => {
+              if (el.category === 'Language') {
+                setLanguage(el.names ?? []);
+              }
+              if (el.category === 'Styles') {
+                setStyle(el.names ?? []);
+              }
+              if (el.category === 'Framework') {
+                setFramework(el.names ?? []);
+              }
+              if (el.category === 'Etc') {
+                setEtc(el.names ?? []);
+              }
+            },
+          );
+        } else {
+          console.error('GET Error:', response.status);
+        }
+      } catch (error) {
+        console.error('GET Error:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <FormControl component="form" onSubmit={handleSubmit}>
@@ -232,6 +320,7 @@ const Stack = () => {
                     <StackItemCard
                       handleClick={handleLanguageChange}
                       item={item}
+                      key={item.name}
                       isSelected={false}
                     />
                   );
@@ -239,41 +328,6 @@ const Stack = () => {
               })}
             </Grid>
           </Grid>
-          {language.length >= 1 && (
-            <Grid item xs={12} sx={{ marginBottom: '30px' }}>
-              <Typography
-                variant="h4"
-                gutterBottom
-                sx={{
-                  fontWeight: '400',
-                }}
-              >
-                프레임워크 및 라이브러리
-              </Typography>
-              <Grid container spacing={2}>
-                {FRAMEWORK_LIST.map(item => {
-                  if (framework.includes(item.name)) {
-                    return (
-                      <StackItemCard
-                        item={item}
-                        handleClick={handleFrameworkChange}
-                        key={item.name}
-                        isSelected
-                      />
-                    );
-                  } else {
-                    return (
-                      <StackItemCard
-                        handleClick={handleFrameworkChange}
-                        item={item}
-                        isSelected={false}
-                      />
-                    );
-                  }
-                })}
-              </Grid>
-            </Grid>
-          )}
           {language.length >= 1 && (
             <Grid item xs={12} sx={{ marginBottom: '30px' }}>
               <Typography
@@ -301,6 +355,7 @@ const Stack = () => {
                       <StackItemCard
                         handleClick={handleStyleChange}
                         item={item}
+                        key={item.name}
                         isSelected={false}
                       />
                     );
@@ -309,8 +364,79 @@ const Stack = () => {
               </Grid>
             </Grid>
           )}
+          {language.length >= 1 && style.length >= 1 && (
+            <>
+              <Grid item xs={12} sx={{ marginBottom: '30px' }}>
+                <Typography
+                  variant="h4"
+                  gutterBottom
+                  sx={{
+                    fontWeight: '400',
+                  }}
+                >
+                  프레임워크 및 라이브러리
+                </Typography>
+                <Grid container spacing={2}>
+                  {FRAMEWORK_LIST.map(item => {
+                    if (framework.includes(item.name)) {
+                      return (
+                        <StackItemCard
+                          item={item}
+                          handleClick={handleFrameworkChange}
+                          key={item.name}
+                          isSelected
+                        />
+                      );
+                    } else {
+                      return (
+                        <StackItemCard
+                          handleClick={handleFrameworkChange}
+                          item={item}
+                          key={item.name}
+                          isSelected={false}
+                        />
+                      );
+                    }
+                  })}
+                </Grid>
+              </Grid>
+              <Grid item xs={12} sx={{ marginBottom: '30px' }}>
+                <Typography
+                  variant="h4"
+                  gutterBottom
+                  sx={{
+                    fontWeight: '400',
+                  }}
+                >
+                  기타
+                </Typography>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={{ display: 'flex', gap: '10px', padding: '20px' }}
+                >
+                  {etc.map(item => (
+                    <EctItem
+                      data={item}
+                      handleEtcDelete={handleEtcDelete}
+                      key={item}
+                    />
+                  ))}
+                </Grid>
+              </Grid>
+              {<StackItemAdd handleAddBtnClick={handleEtcAdd} />}
+            </>
+          )}
         </Grid>
       </Grid>
+      {isModalAlertOpen && (
+        <ModalAlert
+          isOpen={isModalAlertOpen}
+          title={'프로젝트 컨벤션 메이커'}
+          content={alertContent}
+          handleIsOpen={toggleIsModalAlertOpen}
+        />
+      )}
     </FormControl>
   );
 };
@@ -327,7 +453,7 @@ const StackItemCard = ({
   handleClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 }) => {
   return (
-    <Grid item xs={4} lg={2.5}>
+    <Grid item xs={4} lg={4}>
       <Card
         sx={{
           border: isSelected ? '#1976d2 solid 5px' : 'white solid 5px',
@@ -357,14 +483,46 @@ const StackItemCard = ({
 const StackItemAdd = ({
   handleAddBtnClick,
 }: {
-  handleAddBtnClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  handleAddBtnClick: (name: string) => void;
 }) => {
+  const [name, setName] = useState('');
+
   return (
-    <div>
-      <TextField id="outlined-basic" label="Outlined" variant="outlined" />
-      <Button variant="contained" onClick={handleAddBtnClick}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+      <TextField
+        id="outlined-basic"
+        label="Outlined"
+        variant="outlined"
+        onChange={e => {
+          setName(e.target.value);
+        }}
+      />
+      <Button
+        variant="contained"
+        onClick={() => {
+          handleAddBtnClick(name);
+          setName('');
+        }}
+      >
         추가
       </Button>
-    </div>
+    </Box>
+  );
+};
+
+const EctItem = ({
+  data,
+  handleEtcDelete,
+}: {
+  data: string;
+  handleEtcDelete: (name: string) => void;
+}) => {
+  return (
+    <Chip
+      label={data}
+      onDelete={() => {
+        handleEtcDelete(data);
+      }}
+    />
   );
 };
