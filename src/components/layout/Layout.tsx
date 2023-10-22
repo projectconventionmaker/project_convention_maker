@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react';
-
+import Nav from './navbar/Nav';
 import {
   AppBar,
   Box,
@@ -7,10 +7,12 @@ import {
   Drawer,
   Toolbar,
   Typography,
+  Button,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import Logout from '../Logout';
 
 const drawerWidth = 240;
 
@@ -18,6 +20,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [sideBarState, setSideBarState] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const toggleDrawer =
     (state: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -33,7 +36,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
     };
 
   return (
-    <main>
+    <>
       <Box sx={{ display: 'flex' }}>
         <AppBar
           position="fixed"
@@ -53,9 +56,15 @@ const Layout = ({ children }: { children: ReactNode }) => {
             >
               <MenuIcon />
             </ButtonBase>
-            <Typography variant="h6" noWrap component="h1">
-              Clipped drawer
-            </Typography>
+            <Typography variant="h1">프로젝트 컨벤션 메이커</Typography>
+            <Button
+              size="large"
+              variant="contained"
+              color="secondary"
+              onClick={() => setIsLogoutModalOpen(true)}
+            >
+              프로젝트 변경
+            </Button>
           </Toolbar>
         </AppBar>
 
@@ -75,14 +84,22 @@ const Layout = ({ children }: { children: ReactNode }) => {
           }}
         >
           <Toolbar />
-          <Box sx={{ overflow: 'auto' }}>사이드바</Box>
+          <Box sx={{ overflow: 'auto' }}>
+            <Nav />
+          </Box>
         </Drawer>
-
-        <Box width="100%" bgcolor={'white'} sx={{ padding: '52px 44px' }}>
-          {children}
+        <Box width="100%" sx={{ marginTop: '64px' }}>
+          <Box
+            bgcolor={'white'}
+            sx={{ margin: '20px', padding: '40px' }}
+            borderRadius={2}
+          >
+            {children}
+          </Box>
         </Box>
       </Box>
-    </main>
+      <Logout isOpen={isLogoutModalOpen} setIsOpen={setIsLogoutModalOpen} />
+    </>
   );
 };
 

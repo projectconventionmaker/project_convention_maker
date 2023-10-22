@@ -14,16 +14,7 @@ const NAVLIST = [
 const Nav = () => {
   const location = useLocation();
   return (
-    <Box
-      component="nav"
-      sx={{
-        width: '200px',
-        height: '100vh',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-      }}
-    >
+    <Box component="nav">
       <Box>프로젝트명</Box>
       <List>
         {NAVLIST.map(item => (
