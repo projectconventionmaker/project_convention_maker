@@ -14,7 +14,7 @@ import {
 import SaveButton from '../components/Button';
 import ModalAlert from '../components/ModalAlert';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import react from '../assets/react.png';
 import vue from '../assets/vue.png';
@@ -34,6 +34,7 @@ import jotai from '../assets/jotai.png';
 import reactQuery from '../assets/react-query.svg';
 import zustand from '../assets/zustand.png';
 import cypress from '../assets/cypress.png';
+import { useNavigate } from 'react-router-dom';
 
 interface StackItemType {
   name: string;
@@ -122,6 +123,8 @@ const Stack = () => {
   const [isModalAlertOpen, setIsModalAlert] = useState(false);
   const [alertContent, setAlertContent] = useState('');
 
+  const navigator = useNavigate();
+
   const toggleIsModalAlertOpen = () => {
     setIsModalAlert(prev => !prev);
   };
@@ -177,16 +180,76 @@ const Stack = () => {
     setEtc(prev => [...prev, name]);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log({
-      languages: language.map(item => ({ name: item })),
-      frameworks: framework.map(item => ({ name: item })),
-      styles: style.map(item => ({ name: item })),
+    const body = JSON.stringify({
+      tech_stack: [
+        { category: 'Language', names: language },
+        { category: 'Styles', names: style },
+        { category: 'Framework', names: framework },
+        { category: 'Etc', names: etc },
+      ],
     });
-    console.log(etc);
+    try {
+      const response = await fetch(
+        `https://api.pcmk.dppr.me/api/v1/projects/${
+          localStorage.getItem('project_name') ?? localStorage.getItem('id')
+        }/tech-stack`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body,
+        },
+      );
+      // 스택 저장 후 그라운드롤 이동
+      if (response.ok) {
+        navigator('/groundrule');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://api.pcmk.dppr.me/api/v1/projects/${
+            localStorage.getItem('project_name') ?? localStorage.getItem('id')
+          }`,
+        );
+
+        if (response.ok) {
+          const jsonResponse = await response.json();
+          jsonResponse.tech_stack.elements.map(
+            (el: { category: string; names: string[] }) => {
+              if (el.category === 'Language') {
+                setLanguage(el.names ?? []);
+              }
+              if (el.category === 'Styles') {
+                setStyle(el.names ?? []);
+              }
+              if (el.category === 'Framework') {
+                setFramework(el.names ?? []);
+              }
+              if (el.category === 'Etc') {
+                setEtc(el.names ?? []);
+              }
+            },
+          );
+        } else {
+          console.error('GET Error:', response.status);
+        }
+      } catch (error) {
+        console.error('GET Error:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <FormControl component="form" onSubmit={handleSubmit}>
@@ -257,6 +320,7 @@ const Stack = () => {
                     <StackItemCard
                       handleClick={handleLanguageChange}
                       item={item}
+                      key={item.name}
                       isSelected={false}
                     />
                   );
@@ -291,6 +355,7 @@ const Stack = () => {
                       <StackItemCard
                         handleClick={handleStyleChange}
                         item={item}
+                        key={item.name}
                         isSelected={false}
                       />
                     );
@@ -327,6 +392,7 @@ const Stack = () => {
                         <StackItemCard
                           handleClick={handleFrameworkChange}
                           item={item}
+                          key={item.name}
                           isSelected={false}
                         />
                       );
@@ -387,7 +453,7 @@ const StackItemCard = ({
   handleClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 }) => {
   return (
-    <Grid item xs={4} lg={2.5}>
+    <Grid item xs={4} lg={4}>
       <Card
         sx={{
           border: isSelected ? '#1976d2 solid 5px' : 'white solid 5px',
@@ -422,7 +488,7 @@ const StackItemAdd = ({
   const [name, setName] = useState('');
 
   return (
-    <div>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
       <TextField
         id="outlined-basic"
         label="Outlined"
@@ -440,7 +506,7 @@ const StackItemAdd = ({
       >
         추가
       </Button>
-    </div>
+    </Box>
   );
 };
 
