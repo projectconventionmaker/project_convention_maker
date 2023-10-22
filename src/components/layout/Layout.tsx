@@ -47,16 +47,62 @@ const Layout = ({ children }: { children: ReactNode }) => {
           }}
         >
           <Toolbar>
-            <ButtonBase
-              sx={{
-                display: isMobile ? 'block' : 'none',
-              }}
-              onClick={() => {
-                setSideBarState(true);
-              }}
-            >
-              <MenuIcon />
-            </ButtonBase>
+            {isMobile && (
+              <ButtonBase
+                onClick={() => {
+                  setSideBarState(true);
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24px"
+                  viewBox="0 0 24 24"
+                  width="24px"
+                  fill="url(#gradient)"
+                >
+                  <defs>
+                    <linearGradient
+                      id="gradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="0%"
+                    >
+                      <stop
+                        offset="-13.2%"
+                        style={{
+                          stopColor: 'rgb(127, 135, 224)',
+                          stopOpacity: 1,
+                        }}
+                      />
+                      <stop
+                        offset="-13.19%"
+                        style={{
+                          stopColor: 'rgb(38, 73, 202)',
+                          stopOpacity: 1,
+                        }}
+                      />
+                      <stop
+                        offset="46.63%"
+                        style={{
+                          stopColor: 'rgb(106, 118, 223)',
+                          stopOpacity: 1,
+                        }}
+                      />
+                      <stop
+                        offset="107.09%"
+                        style={{
+                          stopColor: 'rgb(50, 176, 247)',
+                          stopOpacity: 1,
+                        }}
+                      />
+                    </linearGradient>
+                  </defs>
+                  <path d="M0 0h24v24H0V0z" fill="none" />
+                  <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                </svg>
+              </ButtonBase>
+            )}
             <Box
               sx={{
                 display: 'flex',
@@ -107,11 +153,18 @@ const Layout = ({ children }: { children: ReactNode }) => {
             sx={{
               margin: '20px',
               padding: '40px',
-              minHeight: '100vh',
             }}
             borderRadius={2}
           >
-            <Box sx={{ maxWidth: '1000px' }}> {children}</Box>
+            <Box
+              sx={{
+                maxWidth: '1000px',
+                minHeight: 'calc(100vh - 24px - 40px - 80px - 40px)',
+              }}
+            >
+              {' '}
+              {children}
+            </Box>
           </Box>
         </Box>
       </Box>

@@ -118,9 +118,21 @@ const CommitPage = () => {
               alignItems: 'center',
             }}
           >
-            <Typography variant="h2" gutterBottom>
-              💌 커밋 컨벤션
-            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
+              <img
+                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Love%20Letter.png"
+                alt="Love Letter"
+                width="60"
+                height="60"
+              />
+              <Typography variant="h2">커밋 컨벤션</Typography>
+            </Box>
             <SaveButton />
           </Box>
         </Grid>

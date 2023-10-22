@@ -5,6 +5,8 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
+  Box,
+  Divider,
 } from '@mui/material';
 import SaveButton from '../components/Button';
 
@@ -16,7 +18,7 @@ const GROUND_RULE = [
   '적극적으로 모르는 것에 대해 질문합니다.',
   '왜 지금 상황이 이렇게 힘든지 말하기 보다 어떻게 하면 이 도전과제를 해결할 수 있을지에 집중합니다.',
   '서로에게 후한 리액션을 해줘요.',
-  '아낌없이 지식을 나눠요.'
+  '아낌없이 지식을 나눠요.',
 ];
 
 const GroundRulePage = () => {
@@ -26,10 +28,10 @@ const GroundRulePage = () => {
     const { name, checked } = event.target;
 
     if (checked) {
-      setSelectedRules((prevSelectedRules) => [...prevSelectedRules, name]);
+      setSelectedRules(prevSelectedRules => [...prevSelectedRules, name]);
     } else {
-      setSelectedRules((prevSelectedRules) =>
-        prevSelectedRules.filter((rule) => rule !== name)
+      setSelectedRules(prevSelectedRules =>
+        prevSelectedRules.filter(rule => rule !== name),
       );
     }
   };
