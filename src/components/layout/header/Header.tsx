@@ -8,7 +8,7 @@ const Header = () => {
     <>
       <header className={styles.container}>
         <div>Project Convention Maker</div>
-        <Link to="intro">
+        <Link to="">
           <Button
             size="large"
             variant="contained"
