@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { nanoid } from 'nanoid';
+import { useNavigate } from 'react-router-dom';
 import useIsLogin from '../hooks/useIsLogin';
 type CategoryType = {
   id: string;
@@ -28,6 +29,7 @@ function deepCopy<T>(obj: T): T {
 
 export default function CodePage() {
   useIsLogin();
+  const navigator = useNavigate();
 
   const [categoryList, setCategoryList] = useState<CategoryType[]>([]);
 
@@ -221,6 +223,7 @@ export default function CodePage() {
                 }).then(response => response.json());
               };
               handleSubmit();
+              navigator('/result')
             }}
           >
             저장
@@ -338,6 +341,7 @@ function Category({
         onSubmit={e => {
           e.preventDefault();
           handleCreateConventionItem(id);
+          
         }}
       >
         <Stack direction="row" gap={4} alignItems="center" marginBottom={3}>
