@@ -1,15 +1,5 @@
-@font-face {
-  src: url('fonts.googleapis.com/earlyaccess/notosanskr.css');
-  font-family: 'Noto Sans KR';
-  ascent-override: 110.35%;
-  descent-override: 27.4%;
-  line-gap-override: 0%;
-  size-adjust: 105.12%;
-  font-display: auto;
-}
 html {
   background-color: #f5f5f5;
-  font-family: 'Noto Sans KR', sans-serif;
 }
 
 body {
