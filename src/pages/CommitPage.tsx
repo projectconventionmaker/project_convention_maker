@@ -10,6 +10,7 @@ import {
 import SaveButton from '../components/Button';
 import { FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useIsLogin from '../hooks/useIsLogin';
 
 const COMMIT_MESSAGES = [
   '[feat] : 기능 추가, 삭제, 변경',
@@ -26,6 +27,8 @@ const COMMIT_MESSAGES = [
 ];
 
 const CommitPage = () => {
+  useIsLogin();
+
   const [commitData, setCommitData] = useState<
     { name: string; checked: boolean }[]
   >([]);

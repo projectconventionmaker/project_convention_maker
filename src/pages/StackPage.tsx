@@ -35,6 +35,7 @@ import reactQuery from '../assets/react-query.svg';
 import zustand from '../assets/zustand.png';
 import cypress from '../assets/cypress.png';
 import { useNavigate } from 'react-router-dom';
+import useIsLogin from '../hooks/useIsLogin';
 
 interface StackItemType {
   name: string;
@@ -212,6 +213,7 @@ const Stack = () => {
       console.error('Error:', error);
     }
   };
+  useIsLogin();
 
   useEffect(() => {
     const fetchData = async () => {

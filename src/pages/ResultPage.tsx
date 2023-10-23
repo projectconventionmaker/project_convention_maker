@@ -7,8 +7,11 @@ import {
   CardContent,
   Box,
 } from '@mui/material';
+import useIsLogin from '../hooks/useIsLogin';
 
 const ResultPage = () => {
+  useIsLogin();
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>

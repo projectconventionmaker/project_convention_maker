@@ -162,7 +162,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 minHeight: 'calc(100vh - 24px - 40px - 80px - 40px)',
               }}
             >
-              {' '}
               {children}
             </Box>
           </Box>

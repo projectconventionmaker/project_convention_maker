@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from 'react';
 import { nanoid } from 'nanoid';
 import SaveButton from '../components/Button';
+import useIsLogin from '../hooks/useIsLogin';
 type CategoryType = {
   id: string;
   category: string;
@@ -27,6 +28,8 @@ function deepCopy<T>(obj: T): T {
 }
 
 export default function CodePage() {
+  useIsLogin();
+
   const [categoryList, setCategoryList] = useState<CategoryType[]>([]);
 
   useEffect(() => {

@@ -9,6 +9,7 @@ import {
   Divider,
 } from '@mui/material';
 import SaveButton from '../components/Button';
+import useIsLogin from '../hooks/useIsLogin';
 
 const GROUND_RULE = [
   '반말은 절대로 하지 않고 높임말도 하지 않으려고 합니다.',
@@ -22,6 +23,8 @@ const GROUND_RULE = [
 ];
 
 const GroundRulePage = () => {
+  useIsLogin();
+
   const [selectedRules, setSelectedRules] = useState<string[]>([]);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
