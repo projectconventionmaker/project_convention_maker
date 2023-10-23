@@ -6,8 +6,11 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
+  Box,
+  Divider,
 } from '@mui/material';
 import SaveButton from '../components/Button';
+import useIsLogin from '../hooks/useIsLogin';
 
 const GROUND_RULE = [
   '반말은 절대로 하지 않고 높임말도 하지 않으려고 합니다.',
@@ -48,6 +51,7 @@ const GroundRulePage = () => {
         return [...prev, { name: rule, checked: false }];
       }
     });
+
   };
   
   const handleSumbit = () => {
@@ -83,11 +87,14 @@ const GroundRulePage = () => {
             그라운드 룰
           </Typography>
         </Grid>
-        <Grid>
-          <SaveButton />
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" gutterBottom>
+            그라운드룰 설명
+          </Typography>
+          <Divider variant="fullWidth" />
         </Grid>
       </Grid>
-      <Grid>
+      <Box sx={{ paddingTop: 2 }}>
         {GROUND_RULE.map((rule, _) => (
           <Grid key={rule}>
             <FormControlLabel
@@ -104,7 +111,7 @@ const GroundRulePage = () => {
             />
           </Grid>
         ))}
-      </Grid>
+      </Box>
     </FormControl>
   );
 };

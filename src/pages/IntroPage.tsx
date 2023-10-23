@@ -24,7 +24,6 @@ const IntroPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(projectName);
     if (!projectName || projectName === '') {
       setAlertContent('프로젝트명을 입력해주세요');
       toggleIsModalAlertOpen();
@@ -69,7 +68,9 @@ const IntroPage = () => {
   return (
     <Box
       style={{
+        height: '70vh',
         display: 'flex',
+        gap: '30px',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
@@ -86,6 +87,7 @@ const IntroPage = () => {
       </Typography>
       <FormControl component="form" onSubmit={handleSubmit}>
         <TextField
+          sx={{ marginBottom: '20px' }}
           id="outlined-basic"
           label="프로젝트명"
           variant="outlined"

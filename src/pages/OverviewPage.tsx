@@ -7,7 +7,8 @@ import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Grid, Typography, FormControl } from '@mui/material';
+import { Grid, Typography, FormControl, Box, Divider } from '@mui/material';
+import useIsLogin from '../hooks/useIsLogin';
 
 interface Teammate {
   id: string;
@@ -28,8 +29,10 @@ interface SavedData {
 }
 
 const OverviewPage = () => {
+
   const [id, setId] = useState<string>('');
   const [savedData, setSavedData] = useState<SavedData>();
+
 
   const handleSubmit = () => {
     const requestData = JSON.stringify(savedData);
@@ -84,14 +87,10 @@ const OverviewPage = () => {
           <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
             프로젝트 개요
           </Typography>
+          <Divider variant="fullWidth" />
         </Grid>
 
-        <Grid>
-          <SaveButton />
-        </Grid>
-      </Grid>
-      <Grid container spacing={2} marginBottom={2}>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6}>
           <TextField
             required
             fullWidth
@@ -106,7 +105,7 @@ const OverviewPage = () => {
             }}
           />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6}>
           <TextField
             required
             fullWidth
@@ -120,9 +119,7 @@ const OverviewPage = () => {
             }}
           />
         </Grid>
-      </Grid>
-      <Grid container>
-        <Grid item xs={5}>
+        <Grid item xs={12}>
           <TextField
             required
             fullWidth
@@ -137,15 +134,28 @@ const OverviewPage = () => {
             }}
           />
         </Grid>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            multiline
+            rows={4}
+            id="standard-basic"
+            label="프로젝트 상세 설명을 입력하세요."
+            onChange={e => {
+              setBody(prev => ({ ...prev, detail: e.target.value }));
+            }}
+          />
+        </Grid>
       </Grid>
-
       <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
         프로젝트 기간
       </Typography>
 
+
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Grid spacing={2} container marginBottom={2}>
           <Grid item xs={3}>
+
             <DatePicker
               label="프로젝트 시작"
               value={savedData?.project_start}
@@ -155,9 +165,8 @@ const OverviewPage = () => {
                   prev => ({ ...prev, project_start: date } as SavedData),
                 );
               }}
+              sx={{ flexGrow: 1 }}
             />
-          </Grid>
-          <Grid item xs={3}>
             <DatePicker
               label="프로젝트 종료"
               defaultValue={savedData?.project_end}
@@ -167,10 +176,11 @@ const OverviewPage = () => {
                   prev => ({ ...prev, project_end: date } as SavedData),
                 );
               }}
+              sx={{ flexGrow: 1 }}
             />
-          </Grid>
-        </Grid>
-      </LocalizationProvider>
+          </Box>
+        </LocalizationProvider>
+      </Grid>
 
       <Grid spacing={2} container alignItems="center">
         <Grid item>
@@ -267,23 +277,6 @@ const OverviewPage = () => {
           </Grid>
         );
       })}
-
-      <Typography variant="h5" component="p" marginTop={2} marginBottom={2}>
-        프로젝트 상세
-      </Typography>
-      <TextField
-        id="standard-basic"
-        multiline
-        fullWidth
-        defaultValue={savedData?.detail}
-        label="프로젝트 상세 설명을 입력하세요."
-        variant="standard"
-        onChange={e => {
-          setSavedData(
-            prev => ({ ...prev, detail: e.target.value } as SavedData),
-          );
-        }}
-      />
     </FormControl>
   );
 };

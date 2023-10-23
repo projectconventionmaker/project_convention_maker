@@ -7,6 +7,7 @@ import {
   Button,
 } from '@mui/material';
 import { Dispatch } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Logout = ({
   isOpen,
@@ -15,6 +16,8 @@ const Logout = ({
   isOpen: boolean;
   setIsOpen: Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const navigator = useNavigate();
+
   return (
     <Dialog open={isOpen}>
       <DialogTitle>프로젝트 변경</DialogTitle>
@@ -25,7 +28,17 @@ const Logout = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setIsOpen(false)}>취소</Button>
-        <Button onClick={() => setIsOpen(false)}>프로젝트 변경</Button>
+        <Button
+          onClick={() => {
+            setIsOpen(false);
+            localStorage.removeItem('data');
+            localStorage.removeItem('id');
+            localStorage.removeItem('project_name');
+            navigator('/');
+          }}
+        >
+          프로젝트 변경
+        </Button>
       </DialogActions>
     </Dialog>
   );

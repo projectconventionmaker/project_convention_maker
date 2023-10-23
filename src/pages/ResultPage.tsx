@@ -5,15 +5,79 @@ import {
   Card,
   CardHeader,
   CardContent,
+  Box,
 } from '@mui/material';
+import useIsLogin from '../hooks/useIsLogin';
+import { useEffect, useState } from 'react';
 
+interface ResultDataType {
+  code_convention: null;
+  commit_convention: { name: string; checked: boolean }[];
+  ground_rule: null;
+  project_detail: null;
+  tech_stack: {
+    category: 'Language' | 'Styles' | 'Framework' | 'Etc';
+    names: string[];
+  }[];
+}
 const ResultPage = () => {
+  const [resultData, setResultData] = useState<ResultDataType>({
+    code_convention: null,
+    commit_convention: [],
+    ground_rule: null,
+    project_detail: null,
+    tech_stack: [],
+  });
+
+  useIsLogin();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://api.pcmk.dppr.me/api/v1/projects/${
+            localStorage.getItem('project_name') ?? localStorage.getItem('id')
+          }`,
+        );
+
+        if (response.ok) {
+          const jsonResponse = await response.json();
+          setResultData({
+            code_convention: null,
+            commit_convention: jsonResponse.commit_convention.elements,
+            ground_rule: null,
+            project_detail: null,
+            tech_stack: jsonResponse.tech_stack.elements,
+          });
+        } else {
+          console.error('Error:', response.status);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Typography variant="h2" gutterBottom>
-          결과 보기
-        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+          }}
+        >
+          <img
+            src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Triangular%20Flag.png"
+            alt="Triangular Flag"
+            width="60"
+            height="60"
+          />
+          <Typography variant="h2">결과 보기</Typography>
+        </Box>
       </Grid>
       <Grid item xs={12}>
         <Typography
@@ -23,7 +87,7 @@ const ResultPage = () => {
             color: '#666666',
           }}
         >
-          {'팀이릉'}이 선택한 결광비니다.
+          {'프로젝트명'}이 설정한 컨벤션입니다.
         </Typography>
         <Divider variant="fullWidth" sx={{}} />
       </Grid>
@@ -81,19 +145,60 @@ const ResultPage = () => {
               <Grid item xs={12} sm={6} lg={4}>
                 <Card variant="outlined">
                   <CardHeader title="언어" />
-                  <CardContent></CardContent>
+                  <CardContent sx={{ '> img': '50px' }}>
+                    <ul>
+                      {resultData?.tech_stack?.map(item => {
+                        if (item.category === 'Language') {
+                          return item.names.map(name => (
+                            <li key={name}>{name}</li>
+                          ));
+                        }
+                        return null;
+                      })}
+                    </ul>
+                  </CardContent>
                 </Card>
               </Grid>
               <Grid item xs={12} sm={6} lg={4}>
                 <Card variant="outlined">
                   <CardHeader title="스타일" />
-                  <CardContent></CardContent>
+                  <CardContent>
+                    <ul>
+                      {resultData?.tech_stack?.map(item => {
+                        if (item.category === 'Styles') {
+                          return item.names.map(name => (
+                            <li key={name}>{name}</li>
+                          ));
+                        }
+                        return null;
+                      })}
+                    </ul>
+                  </CardContent>
                 </Card>
               </Grid>
               <Grid item xs={12} lg={4}>
                 <Card variant="outlined">
                   <CardHeader title="프레임워크" />
-                  <CardContent></CardContent>
+                  <CardContent>
+                    <ul>
+                      {resultData?.tech_stack?.map(item => {
+                        if (item.category === 'Framework') {
+                          return item.names.map(name => (
+                            <li key={name}>{name}</li>
+                          ));
+                        }
+                        return null;
+                      })}
+                      {resultData?.tech_stack?.map(item => {
+                        if (item.category === 'Etc') {
+                          return item.names.map(name => (
+                            <li key={name}>{name}</li>
+                          ));
+                        }
+                        return null;
+                      })}
+                    </ul>
+                  </CardContent>
                 </Card>
               </Grid>
             </Grid>
@@ -120,9 +225,9 @@ const ResultPage = () => {
               <CardHeader title="커밋컨벤션" />
               <CardContent>
                 <ul>
-                  <li>커밋컨벤션 1</li>
-                  <li>커밋컨벤션 2</li>
-                  <li>커밋컨벤션 3</li>
+                  {resultData?.commit_convention?.map(item => (
+                    <li key={item.name}>{item.name}</li>
+                  ))}
                 </ul>
               </CardContent>
             </Card>
