@@ -24,8 +24,7 @@ interface ResultDataType {
     team_name: string;
     project_start: number[];
     project_end: number[];
-    // teammate 타입 설정 필요
-    teammates: {}[];
+    teammates: {id:string, name:string, position:string, link: string}[];
   };
   tech_stack: {
     category: 'Language' | 'Styles' | 'Framework' | 'Etc';
@@ -44,7 +43,6 @@ const ResultPage = () => {
       team_name: '',
       project_start: [],
       project_end: [],
-      // teammate 타입 설정 필요
       teammates: [],
     },
     tech_stack: [],

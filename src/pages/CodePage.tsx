@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { nanoid } from 'nanoid';
-import SaveButton from '../components/Button';
 import useIsLogin from '../hooks/useIsLogin';
 type CategoryType = {
   id: string;

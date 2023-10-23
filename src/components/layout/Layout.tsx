@@ -9,7 +9,7 @@ import {
   Typography,
   Button,
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import Logout from '../Logout';
