@@ -87,7 +87,7 @@ const OverviewPage = () => {
 
   useEffect(() => {
     const getIdAndData = async () => {
-      const uuid = localStorage.getItem('id');
+      const uuid = localStorage.getItem('project_name');
       if (!uuid) return;
       setId(uuid);
       const data = await fetch(

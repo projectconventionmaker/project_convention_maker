@@ -67,7 +67,6 @@ const GroundRulePage = () => {
         body: requestData,
       });
       if (response.ok) {
-        response.json();
         navigate('/commit');
       }
     } catch {
@@ -77,7 +76,7 @@ const GroundRulePage = () => {
 
   useEffect(() => {
     const getGroundRule = async () => {
-      const uuid = localStorage.getItem('id');
+      const uuid = localStorage.getItem('project_name');
       if (!uuid) return;
       setId(uuid);
       const data = await fetch(

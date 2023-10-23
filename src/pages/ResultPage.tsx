@@ -63,6 +63,7 @@ const ResultPage = () => {
 
         if (response.ok) {
           const jsonResponse = await response.json();
+          console.log(jsonResponse);
           setResultData({
             code_convention: jsonResponse.code_convention.elements ?? [],
             commit_convention: jsonResponse.commit_convention.elements ?? [],
@@ -108,7 +109,8 @@ const ResultPage = () => {
             color: '#666666',
           }}
         >
-          {resultData.project_detail.project_name}이 설정한 컨벤션입니다.
+          프로젝트 {resultData.project_detail.project_name}의 설정한
+          컨벤션입니다.
         </Typography>
         <Divider variant="fullWidth" sx={{}} />
       </Grid>
@@ -136,7 +138,7 @@ const ResultPage = () => {
               <Grid item xs={12} sm={6}>
                 <Card variant="outlined">
                   <CardHeader title="프로젝트 개요" />
-                  <CardContent></CardContent>
+                  <CardContent >{resultData.project_detail.introduction}</CardContent>
                 </Card>
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -157,7 +159,17 @@ const ResultPage = () => {
               <Grid item xs={12}>
                 <Card variant="outlined">
                   <CardHeader title="프로젝트 팀원" />
-                  <CardContent></CardContent>
+                  <CardContent>
+                    {resultData.project_detail.teammates.map(teammate => {
+                      return (
+                        <Grid display='flex' marginLeft={5}>
+                          <Grid>이름: {teammate.name}</Grid>
+                          <Grid marginLeft={5}>포지션: {teammate.position}</Grid>
+                          <Grid marginLeft={5}>깃허브: {teammate.link}</Grid>
+                        </Grid>
+                      );
+                    })}
+                  </CardContent>
                 </Card>
               </Grid>
             </Grid>
