@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const name = localStorage.getItem('project_name');
-const id = localStorage.getItem('id');
-
 const useIsLogin = () => {
+  const name = localStorage.getItem('project_name');
+  const id = localStorage.getItem('id');
+
   const navigator = useNavigate();
 
   useEffect(() => {
