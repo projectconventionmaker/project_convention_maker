@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Grid,
   FormControl,
@@ -22,58 +23,69 @@ const GROUND_RULE = [
   '아낌없이 지식을 나눠요.',
 ];
 
+interface GroundRule {
+  name: string;
+  checked: boolean;
+}
+
 const GroundRulePage = () => {
-  useIsLogin();
+  const navigate = useNavigate();
+  const [id, setId] = useState<string>('');
+  const [rules, setRules] = useState<GroundRule[]>([]);
 
-  const [selectedRules, setSelectedRules] = useState<string[]>([]);
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rule = e.target.name;
+    
+    setRules(prev => {
+      const foundIndex = prev.findIndex(item => item.name === rule);
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = event.target;
+      if (foundIndex !== -1) {
+        const updatedItem = {
+          ...prev[foundIndex],
+          checked: !prev[foundIndex].checked,
+        };
+        const updatedData = [...prev];
+        updatedData[foundIndex] = updatedItem;
+        return updatedData;
+      } else {
+        return [...prev, { name: rule, checked: false }];
+      }
+    });
 
-    if (checked) {
-      setSelectedRules(prevSelectedRules => [...prevSelectedRules, name]);
-    } else {
-      setSelectedRules(prevSelectedRules =>
-        prevSelectedRules.filter(rule => rule !== name),
-      );
-    }
+  };
+  
+  const handleSumbit = () => {
+    const requestData = JSON.stringify({ ground_rules: rules });
+    const apiUrl = `https://api.pcmk.dppr.me/api/v1/projects/${id}/ground-rules`;
+    fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestData,
+    }).then(response => response.json());
+    navigate('/commit');
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
   useEffect(() => {
-    // getGroundrule = () => {
-    // }
+    const getGroundRule = async () => {
+      const uuid = localStorage.getItem('id');
+      const response = await fetch(
+        `https://api.pcmk.dppr.me/api/v1/projects/${uuid}`,
+      );
+      const wholeData = await response.json();
+      setId(wholeData.project_uuid);
+    };
+    getGroundRule();
   }, []);
+
   return (
-    <FormControl fullWidth>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 2,
-              }}
-            >
-              <img
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Hamsa.png"
-                alt="Hamsa"
-                width="60"
-                height="60"
-              />
-              <Typography variant="h2">그라운드룰</Typography>
-            </Box>
-            <SaveButton />
-          </Box>
+    <FormControl fullWidth onSubmit={handleSumbit}>
+      <Grid display="flex" justifyContent="space-between" alignItems="center">
+        <Grid>
+          <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
+            그라운드 룰
+          </Typography>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="subtitle1" gutterBottom>
@@ -89,7 +101,9 @@ const GroundRulePage = () => {
               control={
                 <Checkbox
                   name={rule}
-                  checked={selectedRules.includes(rule)}
+                  checked={rules.some(
+                    item => item.name === rule && item.checked,
+                  )}
                   onChange={handleCheckboxChange}
                 />
               }
@@ -103,36 +117,3 @@ const GroundRulePage = () => {
 };
 
 export default GroundRulePage;
-
-// export const AddRule = () => {
-//   const [addedRule, setAddedRule] = useState<string[]>([]);
-//   const [rule, setRule] = useState('');
-//   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     setRule(e.target.value);
-//   };
-//   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     setAddedRule(prev => [...prev, rule]);
-//     setRule('');
-//   };
-//   const handleDelete = (index: number) => {
-//     setAddedRule(prevState => prevState.filter((rule, i) => i !== index));
-//   };
-//   return (
-//     <div>
-//       <form action="" onClick={handleSubmit}>
-//         <input type="text" onChange={handleInput} value={rule} />
-//         <button>Add</button>
-
-//         <ul>
-//           {addedRule.map((rule, index) => (
-//             <>
-//               <li key={nanoid()}>{rule}</li>
-//               <button onClick={() => handleDelete(index)}>❌Delete</button>
-//             </>
-//           ))}
-//         </ul>
-//       </form>
-//     </div>
-//   );
-// };
