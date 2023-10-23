@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FormEvent } from 'react';
 import {
   Grid,
   FormControl,
@@ -35,7 +36,7 @@ const GroundRulePage = () => {
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rule = e.target.name;
-    
+
     setRules(prev => {
       const foundIndex = prev.findIndex(item => item.name === rule);
 
@@ -51,45 +52,81 @@ const GroundRulePage = () => {
         return [...prev, { name: rule, checked: false }];
       }
     });
-
   };
-  
-  const handleSumbit = () => {
+
+  const handleSumbit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const requestData = JSON.stringify({ ground_rules: rules });
     const apiUrl = `https://api.pcmk.dppr.me/api/v1/projects/${id}/ground-rules`;
-    fetch(apiUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: requestData,
-    }).then(response => response.json());
-    navigate('/commit');
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: requestData,
+      });
+      if (response.ok) {
+        response.json();
+        navigate('/commit');
+      }
+    } catch {
+      console.log('통신 실패');
+    }
   };
 
   useEffect(() => {
     const getGroundRule = async () => {
       const uuid = localStorage.getItem('id');
-      const response = await fetch(
+      if (!uuid) return;
+      setId(uuid);
+      const data = await fetch(
         `https://api.pcmk.dppr.me/api/v1/projects/${uuid}`,
       );
-      const wholeData = await response.json();
-      setId(wholeData.project_uuid);
+      const wholeData = await data.json();
+      setRules(wholeData.ground_rule.elements);
     };
     getGroundRule();
   }, []);
 
   return (
-    <FormControl fullWidth onSubmit={handleSumbit}>
-      <Grid display="flex" justifyContent="space-between" alignItems="center">
-        <Grid>
-          <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
-            그라운드 룰
-          </Typography>
+    <FormControl fullWidth component="form" onSubmit={handleSumbit}>
+      <Grid
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        container
+        spacing={2}
+      >
+        <Grid item xs={12}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
+              <img
+                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Love%20Letter.png"
+                alt="Love Letter"
+                width="60"
+                height="60"
+              />
+              <Typography variant="h2">그라운드 룰</Typography>
+            </Box>
+            <SaveButton />
+          </Box>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="subtitle1" gutterBottom>
-            그라운드룰 설명
+            그라운드 룰을 통해 앞으로의 협업의 보다 수월하게 진행할 수 있습니다.
           </Typography>
           <Divider variant="fullWidth" />
         </Grid>

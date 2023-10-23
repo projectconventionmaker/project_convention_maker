@@ -2,56 +2,75 @@ import TextField from '@mui/material/TextField';
 import { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import { nanoid } from 'nanoid';
+import { useNavigate } from 'react-router-dom';
 import SaveButton from '../components/Button';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import { FormEvent } from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Grid, Typography, FormControl, Box, Divider } from '@mui/material';
 import useIsLogin from '../hooks/useIsLogin';
+import { format } from 'date-fns';
 
 interface Teammate {
   id: string;
   name: string;
   position: string;
-  github: string;
+  link: string;
 }
 
 interface SavedData {
-  detail: string | null | undefined;
-  introduction: string | null;
-  project_start: Dayjs | null;
-  project_end: Dayjs | null;
-  project_name: string;
-  project_uuid: string;
-  team_name: string | null;
-  teammates: Teammate[] | null;
+  detail: string | undefined;
+  introduction: string | undefined;
+  project_start: any;
+  project_end: any;
+  project_name: string | undefined;
+  team_name: string | undefined;
+  teammates: Teammate[] | [];
 }
 
 const OverviewPage = () => {
-
+  const navigate = useNavigate();
   const [id, setId] = useState<string>('');
-  const [savedData, setSavedData] = useState<SavedData>();
+  const [savedData, setSavedData] = useState<any>();
 
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const requestData = JSON.stringify({
+      ...savedData,
+      project_start: [2023, 10, 13],
+      project_end: [2023, 12, 19],
+    });
 
-  const handleSubmit = () => {
-    const requestData = JSON.stringify(savedData);
     const apiUrl = `https://api.pcmk.dppr.me/api/v1/projects/${id}`;
-    fetch(apiUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: requestData,
-    }).then(response => response.json());
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: requestData,
+      });
+
+      if (response.ok) {
+        navigate('/stack');
+      }
+    } catch {}
+  };
+
+  const dateInputFormating = (dateArray: any) => {
+    if (!dateArray) return new Date();
+    const dateObject = new Date(dateArray.join('-'));
+    return dateObject;
   };
 
   const addTeammate = () => {
     const newTeammate = {
       id: nanoid(),
-      name: '이름',
-      position: '포지션',
-      github: '깃허브',
+      name: '',
+      position: '',
+      link: '',
     };
 
     const updateTeammate = savedData?.teammates
@@ -69,61 +88,107 @@ const OverviewPage = () => {
   useEffect(() => {
     const getIdAndData = async () => {
       const uuid = localStorage.getItem('id');
-      const response = await fetch(
-        `https://api.pcmk.dppr.me/api/v1/projects/${uuid}`,
-      );
-      const wholeData = await response.json();
       if (!uuid) return;
       setId(uuid);
-      setSavedData(wholeData.project_detail);
+      const data = await fetch(
+        `https://api.pcmk.dppr.me/api/v1/projects/${uuid}`,
+      );
+      const wholeData = await data.json();
+      const { project_uuid, ...projectDetailWithoutUuid } =
+        wholeData.project_detail;
+      setSavedData(projectDetailWithoutUuid);
     };
     getIdAndData();
   }, []);
 
   return (
     <FormControl component="form" onSubmit={handleSubmit} fullWidth>
-      <Grid display="flex" justifyContent="space-between" alignItems="center">
+      <Grid
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        container
+        spacing={2}
+      >
+        <Grid item xs={12}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
+              <img
+                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Love%20Letter.png"
+                alt="Love Letter"
+                width="60"
+                height="60"
+              />
+              <Typography variant="h2">프로젝트 개요</Typography>
+            </Box>
+            <SaveButton />
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" gutterBottom>
+            어떤 프로젝트를 기획하고 계신가요? 전반적인 개요를 작성하여
+            프로젝트의 큰 그림을 그려봅시다.
+          </Typography>
+          <Divider variant="fullWidth" />
+        </Grid>
+      </Grid>
+
+      <Grid display="flex" flexDirection="column">
         <Grid>
           <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
             프로젝트 개요
           </Typography>
-          <Divider variant="fullWidth" />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            fullWidth
-            defaultValue={savedData?.project_name}
-            id="outlined-required"
-            placeholder="프로젝트 이름"
-            onChange={e => {
-              setSavedData(
-                prev =>
-                  ({ ...prev, project_name: e.target.value } as SavedData),
-              );
-            }}
-          />
+        <Grid spacing={2} container marginBottom={2}>
+          <Grid item sm={4}>
+            <TextField
+              required
+              fullWidth
+              value={savedData?.project_name || ''}
+              id="outlined-required"
+              placeholder="프로젝트 이름"
+              onChange={e => {
+                setSavedData(
+                  prev =>
+                    ({ ...prev, project_name: e.target.value } as SavedData),
+                );
+              }}
+            />
+          </Grid>
+          <Grid item sm={4}>
+            <TextField
+              required
+              fullWidth
+              value={savedData?.team_name || ''}
+              id="outlined-required"
+              placeholder="팀 이름"
+              onChange={e => {
+                setSavedData(
+                  prev => ({ ...prev, team_name: e.target.value } as SavedData),
+                );
+              }}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            fullWidth
-            defaultValue={savedData?.team_name}
-            id="outlined-required"
-            placeholder="팀 이름"
-            onChange={e => {
-              setSavedData(
-                prev => ({ ...prev, team_name: e.target.value } as SavedData),
-              );
-            }}
-          />
-        </Grid>
+
         <Grid item xs={12}>
           <TextField
             required
             fullWidth
-            defaultValue={savedData?.introduction}
+            value={savedData?.introduction ? savedData?.introduction : ''}
             id="outlined-required"
             placeholder="프로젝트 한 줄 요약"
             onChange={e => {
@@ -134,53 +199,28 @@ const OverviewPage = () => {
             }}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            multiline
-            rows={4}
-            id="standard-basic"
-            label="프로젝트 상세 설명을 입력하세요."
-            onChange={e => {
-              setBody(prev => ({ ...prev, detail: e.target.value }));
-            }}
-          />
-        </Grid>
       </Grid>
-      <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
+
+      {/* <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
         프로젝트 기간
-      </Typography>
+      </Typography> */}
 
-
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Grid spacing={2} container marginBottom={2}>
+      {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Grid spacing={2} container marginBottom={2} display="flex">
           <Grid item xs={3}>
-
             <DatePicker
               label="프로젝트 시작"
-              value={savedData?.project_start}
-              defaultValue={savedData?.project_start}
-              onChange={date => {
-                setSavedData(
-                  prev => ({ ...prev, project_start: date } as SavedData),
-                );
-              }}
               sx={{ flexGrow: 1 }}
             />
+          </Grid>
+          <Grid item xs={3}>
             <DatePicker
               label="프로젝트 종료"
-              defaultValue={savedData?.project_end}
-              value={savedData?.project_end}
-              onChange={date => {
-                setSavedData(
-                  prev => ({ ...prev, project_end: date } as SavedData),
-                );
-              }}
               sx={{ flexGrow: 1 }}
             />
-          </Box>
-        </LocalizationProvider>
-      </Grid>
+          </Grid>
+        </Grid>
+      </LocalizationProvider> */}
 
       <Grid spacing={2} container alignItems="center">
         <Grid item>
@@ -196,12 +236,7 @@ const OverviewPage = () => {
       </Grid>
       {savedData?.teammates?.map(mate => {
         return (
-          <Grid
-            key={mate.id}
-            container        
-            alignItems="center"
-            marginBottom={2}
-          >
+          <Grid key={mate.id} container alignItems="center" marginBottom={2}>
             <Grid item xs={3}>
               <TextField
                 required
@@ -246,13 +281,13 @@ const OverviewPage = () => {
               <TextField
                 required
                 id="outlined-required"
-                defaultValue={mate.github}
+                defaultValue={mate.link}
                 placeholder="깃허브"
                 fullWidth
                 onChange={e => {
                   const updatedTeammate = savedData?.teammates?.map(t => {
                     if (t.id === mate.id) {
-                      return { ...t, github: e.target.value };
+                      return { ...t, link: e.target.value };
                     }
                     return t;
                   });
@@ -277,6 +312,24 @@ const OverviewPage = () => {
           </Grid>
         );
       })}
+      <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
+        프로젝트 상세 소개
+      </Typography>
+      <Grid item xs={12}>
+        <TextField
+          fullWidth
+          multiline
+          rows={4}
+          id="standard-basic"
+          placeholder="프로젝트의 상세 소개를 작성해 주세요"
+          value={savedData?.detail ? savedData.detail : ''}
+          onChange={e => {
+            setSavedData(
+              prev => ({ ...prev, detail: e.target.value } as SavedData),
+            );
+          }}
+        />
+      </Grid>
     </FormControl>
   );
 };
