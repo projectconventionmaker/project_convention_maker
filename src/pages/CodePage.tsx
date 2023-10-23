@@ -210,8 +210,9 @@ export default function CodePage() {
                 const requestData = JSON.stringify({
                   code_conventions: categoryList,
                 });
-                const apiUrl =
-                  'https://api.pcmk.dppr.me/api/v1/projects/제이/code-conventions';
+                const apiUrl = `https://api.pcmk.dppr.me/api/v1/projects/${localStorage.getItem(
+                  'project_name',
+                )}/code-conventions`;
                 fetch(apiUrl, {
                   method: 'PUT',
                   headers: {

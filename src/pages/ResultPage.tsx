@@ -11,10 +11,22 @@ import useIsLogin from '../hooks/useIsLogin';
 import { useEffect, useState } from 'react';
 
 interface ResultDataType {
-  code_convention: null;
+  code_convention: {
+    category: string;
+    items: { name: string; example: string }[];
+  }[];
   commit_convention: { name: string; checked: boolean }[];
-  ground_rule: null;
-  project_detail: null;
+  ground_rule: { name: string; checked: boolean }[];
+  project_detail: {
+    introduction: string;
+    detail: string;
+    project_name: string;
+    team_name: string;
+    project_start: number[];
+    project_end: number[];
+    // teammate 타입 설정 필요
+    teammates: {}[];
+  };
   tech_stack: {
     category: 'Language' | 'Styles' | 'Framework' | 'Etc';
     names: string[];
@@ -22,10 +34,19 @@ interface ResultDataType {
 }
 const ResultPage = () => {
   const [resultData, setResultData] = useState<ResultDataType>({
-    code_convention: null,
+    code_convention: [],
     commit_convention: [],
-    ground_rule: null,
-    project_detail: null,
+    ground_rule: [],
+    project_detail: {
+      introduction: '',
+      detail: '',
+      project_name: '',
+      team_name: '',
+      project_start: [],
+      project_end: [],
+      // teammate 타입 설정 필요
+      teammates: [],
+    },
     tech_stack: [],
   });
 
@@ -43,11 +64,11 @@ const ResultPage = () => {
         if (response.ok) {
           const jsonResponse = await response.json();
           setResultData({
-            code_convention: null,
-            commit_convention: jsonResponse.commit_convention.elements,
-            ground_rule: null,
-            project_detail: null,
-            tech_stack: jsonResponse.tech_stack.elements,
+            code_convention: jsonResponse.code_convention.elements ?? [],
+            commit_convention: jsonResponse.commit_convention.elements ?? [],
+            ground_rule: jsonResponse?.ground_rule?.elements ?? [],
+            project_detail: jsonResponse?.project_detail ?? [],
+            tech_stack: jsonResponse?.tech_stack?.elements ?? [],
           });
         } else {
           console.error('Error:', response.status);
@@ -87,7 +108,7 @@ const ResultPage = () => {
             color: '#666666',
           }}
         >
-          {'프로젝트명'}이 설정한 컨벤션입니다.
+          {resultData.project_detail.project_name}이 설정한 컨벤션입니다.
         </Typography>
         <Divider variant="fullWidth" sx={{}} />
       </Grid>
@@ -99,13 +120,17 @@ const ResultPage = () => {
               <Grid item xs={12} sm={6}>
                 <Card variant="outlined">
                   <CardHeader title="프로젝트명" />
-                  <CardContent></CardContent>
+                  <CardContent>
+                    {resultData.project_detail.project_name}
+                  </CardContent>
                 </Card>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Card variant="outlined">
                   <CardHeader title="팀명" />
-                  <CardContent></CardContent>
+                  <CardContent>
+                    {resultData.project_detail.team_name}
+                  </CardContent>
                 </Card>
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -117,13 +142,16 @@ const ResultPage = () => {
               <Grid item xs={12} sm={6}>
                 <Card variant="outlined">
                   <CardHeader title="프로젝트 기간" />
-                  <CardContent></CardContent>
+                  <CardContent>
+                    {`${resultData.project_detail.project_start}-
+                    ${resultData.project_detail.project_end}`}
+                  </CardContent>
                 </Card>
               </Grid>
               <Grid item xs={12}>
                 <Card variant="outlined">
                   <CardHeader title="프로젝트 상세설명" />
-                  <CardContent></CardContent>
+                  <CardContent>{resultData.project_detail.detail}</CardContent>
                 </Card>
               </Grid>
               <Grid item xs={12}>
@@ -212,9 +240,11 @@ const ResultPage = () => {
               <CardHeader title="그라운드 룰" />
               <CardContent>
                 <ul>
-                  <li>그라운드룰 1</li>
-                  <li>그라운드룰 2</li>
-                  <li>그라운드룰 3</li>
+                  {resultData?.ground_rule?.map(item => {
+                    if (item.checked) {
+                      return <li key={item.name}>{item.name}</li>;
+                    }
+                  })}
                 </ul>
               </CardContent>
             </Card>
@@ -225,9 +255,11 @@ const ResultPage = () => {
               <CardHeader title="커밋컨벤션" />
               <CardContent>
                 <ul>
-                  {resultData?.commit_convention?.map(item => (
-                    <li key={item.name}>{item.name}</li>
-                  ))}
+                  {resultData?.commit_convention?.map(item => {
+                    if (item.checked) {
+                      return <li key={item.name}>{item.name}</li>;
+                    }
+                  })}
                 </ul>
               </CardContent>
             </Card>
@@ -240,18 +272,20 @@ const ResultPage = () => {
           <CardHeader title="코드컨벤션" />
           <CardContent>
             <Grid container spacing={1}>
-              <Grid item xs={12} lg={6}>
-                <Card variant="outlined">
-                  <CardHeader title="자바스크립트" />
-                  <CardContent></CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <Card variant="outlined">
-                  <CardHeader title="타입스크립트" />
-                  <CardContent></CardContent>
-                </Card>
-              </Grid>
+              {resultData?.code_convention?.map(item => (
+                <Grid item xs={12} lg={6}>
+                  <Card variant="outlined">
+                    <CardHeader title={item.category} />
+                    <CardContent>
+                      <ul>
+                        {item.items.map(el => (
+                          <li key={el.name}>{el.name}</li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
             </Grid>
           </CardContent>
         </Card>
