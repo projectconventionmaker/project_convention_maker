@@ -113,7 +113,7 @@ const GroundRulePage = () => {
               }}
             >
               <img
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Love%20Letter.png"
+                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Hamsa.png"
                 alt="Love Letter"
                 width="60"
                 height="60"

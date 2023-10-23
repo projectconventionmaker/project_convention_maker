@@ -23,8 +23,8 @@ interface Teammate {
 interface SavedData {
   detail: string | undefined;
   introduction: string | undefined;
-  project_start: any;
-  project_end: any;
+  // project_start: any;
+  // project_end: any;
   project_name: string | undefined;
   team_name: string | undefined;
   teammates: Teammate[] | [];
@@ -33,7 +33,7 @@ interface SavedData {
 const OverviewPage = () => {
   const navigate = useNavigate();
   const [id, setId] = useState<string>('');
-  const [savedData, setSavedData] = useState<any>();
+  const [savedData, setSavedData] = useState<SavedData>();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -59,11 +59,17 @@ const OverviewPage = () => {
     } catch {}
   };
 
-  const dateInputFormating = (dateArray: any) => {
-    if (!dateArray) return new Date();
-    const dateObject = new Date(dateArray.join('-'));
-    return dateObject;
-  };
+  // const dateInputFormating = (dateArray: any) => {
+  //   if (!dateArray) return new Date();
+  //   const dateObject = new Date(dateArray.join('-'));
+  //   return dateObject;
+  // };
+
+  // const dateInputFormating = (dateArray: any) => {
+  //   if (!dateArray) return new Date();
+  //   const dateObject = new Date(dateArray.join('-'));
+  //   return dateObject;
+  // };
 
   const addTeammate = () => {
     const newTeammate = {
@@ -84,6 +90,30 @@ const OverviewPage = () => {
     const deletedResult = array?.filter(mate => mate.id !== uniqueKey);
     setSavedData({ ...savedData, teammates: deletedResult } as SavedData);
   };
+
+  // const handleStartDateChange = newDate => {
+  //   if (newDate !== null) {
+  //     setSavedData({
+  //       ...savedData,
+  //       project_start: [
+  //         newDate.getFullYear(),
+  //         newDate.getMonth(),
+  //         newDate.getDate(),
+  //       ],
+  //     });
+  //   } else {
+  //     const today = new Date();
+  //     setSavedData({
+  //       ...savedData,
+  //       project_start: [
+  //         today.getFullYear(),
+  //         today.getMonth(),
+  //         today.getDate(),
+  //       ],
+  //     });
+  //   }
+  // };
+  
 
   useEffect(() => {
     const getIdAndData = async () => {
@@ -126,7 +156,7 @@ const OverviewPage = () => {
               }}
             >
               <img
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Love%20Letter.png"
+                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Party%20Popper.png"
                 alt="Love Letter"
                 width="60"
                 height="60"
@@ -211,13 +241,11 @@ const OverviewPage = () => {
             <DatePicker
               label="프로젝트 시작"
               sx={{ flexGrow: 1 }}
+              onChange={handleStartDateChange}
             />
           </Grid>
           <Grid item xs={3}>
-            <DatePicker
-              label="프로젝트 종료"
-              sx={{ flexGrow: 1 }}
-            />
+            <DatePicker label="프로젝트 종료" sx={{ flexGrow: 1 }} />
           </Grid>
         </Grid>
       </LocalizationProvider> */}
