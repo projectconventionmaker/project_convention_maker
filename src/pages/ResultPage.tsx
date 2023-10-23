@@ -64,11 +64,11 @@ const ResultPage = () => {
         if (response.ok) {
           const jsonResponse = await response.json();
           setResultData({
-            code_convention: jsonResponse.code_convention.elements,
-            commit_convention: jsonResponse.commit_convention.elements,
-            ground_rule: jsonResponse.ground_rule.elements,
-            project_detail: jsonResponse.project_detail,
-            tech_stack: jsonResponse.tech_stack.elements,
+            code_convention: jsonResponse.code_convention.elements ?? [],
+            commit_convention: jsonResponse.commit_convention.elements ?? [],
+            ground_rule: jsonResponse?.ground_rule?.elements ?? [],
+            project_detail: jsonResponse?.project_detail ?? [],
+            tech_stack: jsonResponse?.tech_stack?.elements ?? [],
           });
         } else {
           console.error('Error:', response.status);

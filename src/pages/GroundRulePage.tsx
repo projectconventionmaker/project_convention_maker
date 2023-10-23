@@ -35,7 +35,7 @@ const GroundRulePage = () => {
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rule = e.target.name;
-    
+
     setRules(prev => {
       const foundIndex = prev.findIndex(item => item.name === rule);
 
@@ -51,9 +51,8 @@ const GroundRulePage = () => {
         return [...prev, { name: rule, checked: false }];
       }
     });
-
   };
-  
+
   const handleSumbit = () => {
     const requestData = JSON.stringify({ ground_rules: rules });
     const apiUrl = `https://api.pcmk.dppr.me/api/v1/projects/${id}/ground-rules`;
@@ -81,11 +80,32 @@ const GroundRulePage = () => {
 
   return (
     <FormControl fullWidth onSubmit={handleSumbit}>
-      <Grid display="flex" justifyContent="space-between" alignItems="center">
-        <Grid>
-          <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
-            그라운드 룰
-          </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
+              <img
+                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Hamsa.png"
+                alt="Hamsa"
+                width="60"
+                height="60"
+              />
+              <Typography variant="h2">그라운드룰</Typography>
+            </Box>
+            <SaveButton />
+          </Box>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="subtitle1" gutterBottom>
