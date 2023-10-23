@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Grid,
   FormControl,
@@ -16,39 +17,67 @@ const GROUND_RULE = [
   '적극적으로 모르는 것에 대해 질문합니다.',
   '왜 지금 상황이 이렇게 힘든지 말하기 보다 어떻게 하면 이 도전과제를 해결할 수 있을지에 집중합니다.',
   '서로에게 후한 리액션을 해줘요.',
-  '아낌없이 지식을 나눠요.'
+  '아낌없이 지식을 나눠요.',
 ];
 
+interface GroundRule {
+  name: string;
+  checked: boolean;
+}
+
 const GroundRulePage = () => {
-  const [selectedRules, setSelectedRules] = useState<string[]>([]);
+  const navigate = useNavigate();
+  const [id, setId] = useState<string>('');
+  const [rules, setRules] = useState<GroundRule[]>([]);
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = event.target;
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rule = e.target.name;
+    
+    setRules(prev => {
+      const foundIndex = prev.findIndex(item => item.name === rule);
 
-    if (checked) {
-      setSelectedRules((prevSelectedRules) => [...prevSelectedRules, name]);
-    } else {
-      setSelectedRules((prevSelectedRules) =>
-        prevSelectedRules.filter((rule) => rule !== name)
-      );
-    }
+      if (foundIndex !== -1) {
+        const updatedItem = {
+          ...prev[foundIndex],
+          checked: !prev[foundIndex].checked,
+        };
+        const updatedData = [...prev];
+        updatedData[foundIndex] = updatedItem;
+        return updatedData;
+      } else {
+        return [...prev, { name: rule, checked: false }];
+      }
+    });
+  };
+  
+  const handleSumbit = () => {
+    const requestData = JSON.stringify({ ground_rules: rules });
+    const apiUrl = `https://api.pcmk.dppr.me/api/v1/projects/${id}/ground-rules`;
+    fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestData,
+    }).then(response => response.json());
+    navigate('/commit');
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
   useEffect(() => {
-    // getGroundrule = () => {
-    // }
+    const getGroundRule = async () => {
+      const uuid = localStorage.getItem('id');
+      const response = await fetch(
+        `https://api.pcmk.dppr.me/api/v1/projects/${uuid}`,
+      );
+      const wholeData = await response.json();
+      setId(wholeData.project_uuid);
+    };
+    getGroundRule();
   }, []);
+
   return (
-    <FormControl fullWidth>
-      <Grid
-        spacing={2}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-      >
+    <FormControl fullWidth onSubmit={handleSumbit}>
+      <Grid display="flex" justifyContent="space-between" alignItems="center">
         <Grid>
           <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
             그라운드 룰
@@ -65,7 +94,9 @@ const GroundRulePage = () => {
               control={
                 <Checkbox
                   name={rule}
-                  checked={selectedRules.includes(rule)}
+                  checked={rules.some(
+                    item => item.name === rule && item.checked,
+                  )}
                   onChange={handleCheckboxChange}
                 />
               }
@@ -79,36 +110,3 @@ const GroundRulePage = () => {
 };
 
 export default GroundRulePage;
-
-// export const AddRule = () => {
-//   const [addedRule, setAddedRule] = useState<string[]>([]);
-//   const [rule, setRule] = useState('');
-//   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     setRule(e.target.value);
-//   };
-//   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     setAddedRule(prev => [...prev, rule]);
-//     setRule('');
-//   };
-//   const handleDelete = (index: number) => {
-//     setAddedRule(prevState => prevState.filter((rule, i) => i !== index));
-//   };
-//   return (
-//     <div>
-//       <form action="" onClick={handleSubmit}>
-//         <input type="text" onChange={handleInput} value={rule} />
-//         <button>Add</button>
-
-//         <ul>
-//           {addedRule.map((rule, index) => (
-//             <>
-//               <li key={nanoid()}>{rule}</li>
-//               <button onClick={() => handleDelete(index)}>❌Delete</button>
-//             </>
-//           ))}
-//         </ul>
-//       </form>
-//     </div>
-//   );
-// };

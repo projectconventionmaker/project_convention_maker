@@ -16,33 +16,26 @@ interface Teammate {
   github: string;
 }
 
-interface OverviewData {
-  project_name: string;
-  team_name: string;
+interface SavedData {
+  detail: string | null | undefined;
+  introduction: string | null;
   project_start: Dayjs | null;
   project_end: Dayjs | null;
-  summary: string;
-  detail: string;
-  teammate: Teammate[];
+  project_name: string;
+  project_uuid: string;
+  team_name: string | null;
+  teammates: Teammate[] | null;
 }
 
 const OverviewPage = () => {
-  const [body, setBody] = useState<OverviewData>({
-    project_name: '',
-    team_name: '',
-    project_start: null,
-    project_end: null,
-    summary: '',
-    detail: '',
-    teammate: [],
-  });
+  const [id, setId] = useState<string>('');
+  const [savedData, setSavedData] = useState<SavedData>();
 
   const handleSubmit = () => {
-    const requestData = JSON.stringify(body);
-    const apiUrl =
-      'https://api.pcmk.dppr.me/api/v1/projects/e1555f7b-8113-4224-a082-1503c43de5ab';
+    const requestData = JSON.stringify(savedData);
+    const apiUrl = `https://api.pcmk.dppr.me/api/v1/projects/${id}`;
     fetch(apiUrl, {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -57,35 +50,36 @@ const OverviewPage = () => {
       position: '포지션',
       github: '깃허브',
     };
-    const updateTeammate = [...body.teammate, newTeammate];
-    setBody({ ...body, teammate: updateTeammate });
+
+    const updateTeammate = savedData?.teammates
+      ? [...savedData.teammates, newTeammate]
+      : [newTeammate];
+    setSavedData({ ...savedData, teammates: updateTeammate } as SavedData);
   };
 
   const deleteTeammate = (uniqueKey: string) => {
-    const array = body.teammate.slice();
-    const deletedReslut = array.filter(mate => mate.id !== uniqueKey);
-    setBody({ ...body, teammate: deletedReslut });
+    const array = savedData?.teammates?.slice();
+    const deletedResult = array?.filter(mate => mate.id !== uniqueKey);
+    setSavedData({ ...savedData, teammates: deletedResult } as SavedData);
   };
 
   useEffect(() => {
-    const getOverview = async () => {
-      const projectDetail = localStorage.getItem(data);
-      if (projectDetail) {
-        const parsedData = JSON.parse(projectDetail);
-        setBody(parsedData);
-      }
+    const getIdAndData = async () => {
+      const uuid = localStorage.getItem('id');
+      const response = await fetch(
+        `https://api.pcmk.dppr.me/api/v1/projects/${uuid}`,
+      );
+      const wholeData = await response.json();
+      if (!uuid) return;
+      setId(uuid);
+      setSavedData(wholeData.project_detail);
     };
-    getOverview();
+    getIdAndData();
   }, []);
 
   return (
     <FormControl component="form" onSubmit={handleSubmit} fullWidth>
-      <Grid
-        spacing={2}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-      >
+      <Grid display="flex" justifyContent="space-between" alignItems="center">
         <Grid>
           <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
             프로젝트 개요
@@ -101,10 +95,14 @@ const OverviewPage = () => {
           <TextField
             required
             fullWidth
+            defaultValue={savedData?.project_name}
             id="outlined-required"
             placeholder="프로젝트 이름"
             onChange={e => {
-              setBody(prev => ({ ...prev, project_name: e.target.value }));
+              setSavedData(
+                prev =>
+                  ({ ...prev, project_name: e.target.value } as SavedData),
+              );
             }}
           />
         </Grid>
@@ -112,10 +110,13 @@ const OverviewPage = () => {
           <TextField
             required
             fullWidth
+            defaultValue={savedData?.team_name}
             id="outlined-required"
             placeholder="팀 이름"
             onChange={e => {
-              setBody(prev => ({ ...prev, team_name: e.target.value }));
+              setSavedData(
+                prev => ({ ...prev, team_name: e.target.value } as SavedData),
+              );
             }}
           />
         </Grid>
@@ -125,10 +126,14 @@ const OverviewPage = () => {
           <TextField
             required
             fullWidth
+            defaultValue={savedData?.introduction}
             id="outlined-required"
             placeholder="프로젝트 한 줄 요약"
             onChange={e => {
-              setBody(prev => ({ ...prev, summary: e.target.value }));
+              setSavedData(
+                prev =>
+                  ({ ...prev, introduction: e.target.value } as SavedData),
+              );
             }}
           />
         </Grid>
@@ -139,29 +144,35 @@ const OverviewPage = () => {
       </Typography>
 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Grid spacing={2} container xs={6} marginBottom={2}>
+        <Grid spacing={2} container marginBottom={2}>
           <Grid item xs={3}>
             <DatePicker
               label="프로젝트 시작"
-              value={body.project_start}
+              value={savedData?.project_start}
+              defaultValue={savedData?.project_start}
               onChange={date => {
-                setBody(prev => ({ ...prev, project_start: date }));
+                setSavedData(
+                  prev => ({ ...prev, project_start: date } as SavedData),
+                );
               }}
             />
           </Grid>
           <Grid item xs={3}>
             <DatePicker
               label="프로젝트 종료"
-              value={body.project_end}
+              defaultValue={savedData?.project_end}
+              value={savedData?.project_end}
               onChange={date => {
-                setBody(prev => ({ ...prev, project_end: date }));
+                setSavedData(
+                  prev => ({ ...prev, project_end: date } as SavedData),
+                );
               }}
             />
           </Grid>
         </Grid>
       </LocalizationProvider>
 
-      <Grid spacing={2} container alignItems="center" xs={6}>
+      <Grid spacing={2} container alignItems="center">
         <Grid item>
           <Typography variant="h5" component="p" marginBottom={2} marginTop={2}>
             프로젝트 팀원
@@ -173,12 +184,11 @@ const OverviewPage = () => {
           </Button>
         </Grid>
       </Grid>
-      {body.teammate.map(mate => {
+      {savedData?.teammates?.map(mate => {
         return (
           <Grid
             key={mate.id}
-            container
-            xs={7}
+            container        
             alignItems="center"
             marginBottom={2}
           >
@@ -187,14 +197,18 @@ const OverviewPage = () => {
                 required
                 id="outlined-required"
                 placeholder="이름"
+                defaultValue={mate.name}
                 onChange={e => {
-                  const updatedTeammate = body.teammate.map(t => {
+                  const updatedTeammate = savedData?.teammates?.map(t => {
                     if (t.id === mate.id) {
                       return { ...t, name: e.target.value };
                     }
                     return t;
                   });
-                  setBody(prev => ({ ...prev, teammate: updatedTeammate }));
+                  setSavedData(
+                    prev =>
+                      ({ ...prev, teammates: updatedTeammate } as SavedData),
+                  );
                 }}
               />
             </Grid>
@@ -203,14 +217,18 @@ const OverviewPage = () => {
                 required
                 id="outlined-required"
                 placeholder="포지션"
+                defaultValue={mate.position}
                 onChange={e => {
-                  const updatedTeammate = body.teammate.map(t => {
+                  const updatedTeammate = savedData?.teammates?.map(t => {
                     if (t.id === mate.id) {
                       return { ...t, position: e.target.value };
                     }
                     return t;
                   });
-                  setBody(prev => ({ ...prev, teammate: updatedTeammate }));
+                  setSavedData(
+                    prev =>
+                      ({ ...prev, teammates: updatedTeammate } as SavedData),
+                  );
                 }}
               />
             </Grid>
@@ -218,16 +236,20 @@ const OverviewPage = () => {
               <TextField
                 required
                 id="outlined-required"
+                defaultValue={mate.github}
                 placeholder="깃허브"
                 fullWidth
                 onChange={e => {
-                  const updatedTeammate = body.teammate.map(t => {
+                  const updatedTeammate = savedData?.teammates?.map(t => {
                     if (t.id === mate.id) {
                       return { ...t, github: e.target.value };
                     }
                     return t;
                   });
-                  setBody(prev => ({ ...prev, teammate: updatedTeammate }));
+                  setSavedData(
+                    prev =>
+                      ({ ...prev, teammates: updatedTeammate } as SavedData),
+                  );
                 }}
               />
             </Grid>
@@ -253,10 +275,13 @@ const OverviewPage = () => {
         id="standard-basic"
         multiline
         fullWidth
+        defaultValue={savedData?.detail}
         label="프로젝트 상세 설명을 입력하세요."
         variant="standard"
         onChange={e => {
-          setBody(prev => ({ ...prev, detail: e.target.value }));
+          setSavedData(
+            prev => ({ ...prev, detail: e.target.value } as SavedData),
+          );
         }}
       />
     </FormControl>
