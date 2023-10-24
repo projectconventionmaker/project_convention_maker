@@ -8,7 +8,7 @@
 🔗 서비스 링크 : https://project-convention-maker-fe-kd4c.vercel.app/
 
 🔗 백엔드 레포 : https://github.com/projectconventionmaker/project_convention_maker_BE
-![image](https://github.com/projectconventionmaker/project_convention_maker_FE/assets/75254185/d61d6a7b-c225-4086-9c4e-eebeb16bf52a)
+![ezgif com-video-to-gif (5)](https://github.com/projectconventionmaker/project_convention_maker_FE/assets/75254185/f3497d45-52c8-417c-a0f5-cedf53ac41b2)
 
 ## **팀원 구성**
 | 닉네임 | 역할 | 상세 
