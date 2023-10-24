@@ -1,27 +1,41 @@
-# React + TypeScript + Vite
+# **프로젝트 컨벤션 메이커**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+부장님 회의시간이 너무 길어요
 
-Currently, two official plugins are available:
+프로젝트 컨벤션 회의 너무 지겹다!
+3분 카레처럼 컨벤션을 뚝딱 만들고 회의를 끝낼 수 있도록 도와주는 서비스입니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🔗 서비스 링크 : https://project-convention-maker-fe-kd4c.vercel.app/
 
-## Expanding the ESLint configuration
+🔗 백엔드 레포 : https://github.com/projectconventionmaker/project_convention_maker_BE
+![image](https://github.com/projectconventionmaker/project_convention_maker_FE/assets/75254185/d61d6a7b-c225-4086-9c4e-eebeb16bf52a)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## **팀원 구성**
+| 닉네임 | 역할 | 상세 
+| --- | --- | --- 
+| [케스](https://github.com/kes-knows-nothing) | 진행자/PL, FE | 프로젝트 개요, 그라운드 롤 페이지
+| [사라](https://github.com/sasha1107) | 디자인, FE |  UX/UI 구현 및 설계, 페이지 레이아웃
+| [제이](https://github.com/Jxxunnn) | FE | 코드 컨벤션 페이지
+| [마님](https://github.com/a-honey) | FE | 인트로, 기술스택, 결과페이지
+| [용용](https://github.com/dragonappear) | BE | API 설계 및 구현, 문서화
 
-- Configure the top-level `parserOptions` property like this:
+## **기술 스택 및 도구**
+![React](https://img.shields.io/badge/-React-61DAFB?style=for-the-badge&logo=react&logoColor=ffffff)
+![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=ffffff)
+![Vite](https://img.shields.io/badge/-Vite-646CFF?style=for-the-badge&logo=vite&logoColor=ffffff)
+![Material-UI](https://img.shields.io/badge/-Material--UI-0081CB?style=for-the-badge&logo=material-ui&logoColor=ffffff)
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+## 프로젝트 설치 및 실행 방법
+1. 저장소를 클론합니다.
+2. 필요한 패키지들을 설치합니다.
+   ```shell
+   npm install
+   ```
+3. 개발 서버를 실행합니다.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+   ```
+   npm run dev
+   ```
+
+
+
