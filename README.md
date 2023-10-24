@@ -19,6 +19,9 @@
 | [마님](https://github.com/a-honey) | FE | 인트로, 기술스택, 결과페이지
 | [용용](https://github.com/dragonappear) | BE | API 설계 및 구현, 문서화
 
+## **프로젝트 기간**
+- 2023.10.18 ~ 2023.10.23
+
 ## **기술 스택 및 도구**
 ![React](https://img.shields.io/badge/-React-61DAFB?style=for-the-badge&logo=react&logoColor=ffffff)
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=ffffff)
