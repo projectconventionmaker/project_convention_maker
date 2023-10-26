@@ -16,101 +16,99 @@ import ModalAlert from '../components/ModalAlert';
 
 import React, { useState, useEffect } from 'react';
 
-import react from '../assets/react.png';
-import vue from '../assets/vue.png';
-import javascript from '../assets/javascript.png';
-import typescript from '../assets/typescript.png';
-import svelte from '../assets/svelte.png';
-import angular from '../assets/angular.png';
-import css from '../assets/css.png';
-import recoil from '../assets/recoil.svg';
-import redux from '../assets/redux.png';
-import tailwind from '../assets/tailwindcss.png';
-import axios from '../assets/axios.svg';
-import storybook from '../assets/storybook.svg';
-import sass from '../assets/sass.png';
-import jest from '../assets/jest.png';
-import jotai from '../assets/jotai.png';
-import reactQuery from '../assets/react-query.svg';
-import zustand from '../assets/zustand.png';
-import cypress from '../assets/cypress.png';
 import { useNavigate } from 'react-router-dom';
 import useIsLogin from '../hooks/useIsLogin';
 
 interface StackItemType {
   name: string;
   description: string;
-  imgUrl: string;
+  imgPosition: string;
 }
 
 const LANGUAGE_LIST: StackItemType[] = [
-  { name: 'JavaScript', description: '웹 개발 언어', imgUrl: javascript },
-  { name: 'TypeScript', description: '정적 타입 언어', imgUrl: typescript },
+  { name: 'JavaScript', description: '웹 개발 언어', imgPosition: '-4px -2px' },
+  {
+    name: 'TypeScript',
+    description: '정적 타입 언어',
+    imgPosition: '-85px -8px',
+  },
 ];
 
 const FRAMEWORK_LIST: StackItemType[] = [
   {
     name: 'React',
     description: '인기있는 UI 라이브러리',
-    imgUrl: react,
+    imgPosition: '-3px -80px',
   },
-  { name: 'Vue', description: '접근성 있는 프레임워크', imgUrl: vue },
+  {
+    name: 'Vue',
+    description: '접근성 있는 프레임워크',
+    imgPosition: '-73px -80px',
+  },
   {
     name: 'Angular',
     description: '엔터프라이즈 프레임워크',
-    imgUrl: angular,
+    imgPosition: '-143px -80px',
   },
   {
     name: 'Svelte',
     description: '빠르고 간단한 UI 프레임워크',
-    imgUrl: svelte,
+    imgPosition: '-213px -70px',
   },
-  { name: 'Redux', description: '상태 관리 라이브러리', imgUrl: redux },
-  { name: 'Recoil', description: '최신 상태 관리 도구', imgUrl: recoil },
+  {
+    name: 'Redux',
+    description: '상태 관리 라이브러리',
+    imgPosition: '-3px -250px',
+  },
+  {
+    name: 'Recoil',
+    description: '최신 상태 관리 도구',
+    imgPosition: '-70px -240px',
+  },
   {
     name: 'Zustand',
     description: '간편한 상태 관리 라이브러리',
-    imgUrl: zustand,
+    imgPosition: '-220px -245px',
   },
   {
     name: 'Jotai',
     description: '리액티브 상태 관리 도구',
-    imgUrl: jotai,
+    imgPosition: '-140px -240px',
   },
   {
     name: 'Axios',
     description: 'HTTP 클라이언트 라이브러리',
-    imgUrl: axios,
+    imgPosition: '-3px -308px',
   },
   {
     name: 'React-query',
     description: '데이터 쿼리 및 캐싱 라이브러리',
-    imgUrl: reactQuery,
+    imgPosition: '-73px -308px',
   },
   {
     name: 'Jest',
     description: '자바스크립트 테스트 프레임워크',
-    imgUrl: jest,
+    imgPosition: '-73px -370px',
   },
   {
     name: 'Cypress',
     description: '엔드 투 엔드 테스트 도구',
-    imgUrl: cypress,
+    imgPosition: '-3px -374px',
   },
   {
     name: 'Storybook',
     description: 'UI 컴포넌트 개발 환경',
-    imgUrl: storybook,
+    imgPosition: '-143px -374px',
   },
 ];
 
 const STYLE_LIST: StackItemType[] = [
-  { name: 'CSS', description: '웹 스타일링 언어', imgUrl: css },
-  { name: 'SASS', description: 'CSS 확장 언어', imgUrl: sass },
+  { name: 'CSS', description: '웹 스타일링 언어', imgPosition: '-0px -160px' },
+  { name: 'SASS', description: 'CSS 확장 언어', imgPosition: '-80px -160px' },
   {
     name: 'TailwindCSS',
     description: '구성 가능한 CSS 프레임워크',
-    imgUrl: tailwind,
+    imgPosition: '-150px -160px',
   },
 ];
 
@@ -473,7 +471,18 @@ const StackItemCard = ({
           <CardHeader title={item.name} />
           <CardContent>{item.description}</CardContent>
         </div>
-        <img style={{ width: '50px' }} src={item.imgUrl} alt={item.name} />
+        <div
+          style={{ display: 'block', overflow: 'hidden', position: 'relative' }}
+        >
+          <div
+            style={{
+              background: "url('/icons.png')",
+              width: '70px',
+              height: '70px',
+              backgroundPosition: item.imgPosition,
+            }}
+          />
+        </div>
       </Card>
     </Grid>
   );
